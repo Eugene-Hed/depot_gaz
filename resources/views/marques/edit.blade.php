@@ -2,62 +2,198 @@
 
 @section('content')
 <div class="container-fluid">
+    <!-- Header -->
     <div class="row mb-4">
         <div class="col">
-            <h1><i class="fas fa-edit"></i> Modifier marque</h1>
+            <h1 class="mb-0">
+                <i class="bi bi-pencil-square"></i> Modifier marque
+            </h1>
+            <p class="text-muted">Mettre à jour les informations de la marque</p>
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-lg-6 offset-lg-3">
-            <div class="card">
-                <div class="card-body">
+    <!-- Main Content -->
+    <div class="row g-4">
+        <!-- Form Column (Left - 8 cols) -->
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
                     <form action="{{ route('marques.update', $marque) }}" method="POST">
                         @csrf
                         @method('PUT')
 
-                        <div class="mb-3">
-                            <label for="nom" class="form-label">
-                                <i class="fas fa-tag"></i> Nom de la marque
+                        <!-- Nom -->
+                        <div class="mb-4">
+                            <label for="nom" class="form-label fw-bold">
+                                <i class="bi bi-tag"></i> Nom de la marque
                             </label>
-                            <input type="text" class="form-control @error('nom') is-invalid @enderror" 
-                                   id="nom" name="nom" placeholder="Ex: Butagaz, Primagaz..." 
+                            <input type="text" class="form-control form-control-lg @error('nom') is-invalid @enderror" 
+                                   id="nom" name="nom" placeholder="Ex: TotalEnergies, Butagaz..." 
                                    value="{{ old('nom', $marque->nom) }}" required>
                             @error('nom')
-                                <div class="invalid-feedback">{{ $message }}</div>
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
                             @enderror
                         </div>
 
-                        <div class="mb-3">
-                            <label for="statut" class="form-label">
-                                <i class="fas fa-toggle-on"></i> Statut
+                        <!-- Statut -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold mb-3">
+                                <i class="bi bi-toggle-on"></i> Statut
                             </label>
-                            <select class="form-select @error('statut') is-invalid @enderror" 
-                                    id="statut" name="statut" required>
-                                <option value="actif" {{ old('statut', $marque->statut) === 'actif' ? 'selected' : '' }}>Actif</option>
-                                <option value="inactif" {{ old('statut', $marque->statut) === 'inactif' ? 'selected' : '' }}>Inactif</option>
-                            </select>
+                            <div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="statut" id="statut_actif" 
+                                           value="actif" {{ old('statut', $marque->statut) === 'actif' ? 'checked' : '' }} required>
+                                    <label class="form-check-label" for="statut_actif">
+                                        <span class="badge bg-success">Actif</span>
+                                    </label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="statut" id="statut_inactif" 
+                                           value="inactif" {{ old('statut', $marque->statut) === 'inactif' ? 'checked' : '' }} required>
+                                    <label class="form-check-label" for="statut_inactif">
+                                        <span class="badge bg-secondary">Inactif</span>
+                                    </label>
+                                </div>
+                            </div>
                             @error('statut')
-                                <div class="invalid-feedback">{{ $message }}</div>
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
                             @enderror
                         </div>
 
                         @error('error')
-                            <div class="alert alert-danger mb-3">{{ $message }}</div>
+                            <div class="alert alert-danger mb-4" role="alert">
+                                <i class="bi bi-exclamation-circle"></i> {{ $message }}
+                            </div>
                         @enderror
 
-                        <div class="d-flex gap-2">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-save"></i> Mettre à jour
+                        <!-- Form Actions -->
+                        <div class="d-flex gap-2 pt-3">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-check-lg"></i> Mettre à jour
                             </button>
-                            <a href="{{ route('marques.index') }}" class="btn btn-secondary">
-                                <i class="fas fa-times"></i> Annuler
+                            <a href="{{ route('marques.index') }}" class="btn btn-outline-secondary btn-lg">
+                                <i class="bi bi-x-lg"></i> Annuler
                             </a>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
+
+        <!-- Info Sidebar (Right - 4 cols) -->
+        <div class="col-lg-4">
+            <!-- Current Information Card -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-light border-0">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-info-circle"></i> Informations actuelles
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <dl class="row g-3 mb-0">
+                        <dt class="col-sm-5 fw-bold text-muted">Nom:</dt>
+                        <dd class="col-sm-7">
+                            <span class="badge bg-light text-dark">{{ $marque->nom }}</span>
+                        </dd>
+
+                        <dt class="col-sm-5 fw-bold text-muted">Statut:</dt>
+                        <dd class="col-sm-7">
+                            @if ($marque->statut === 'actif')
+                                <span class="badge bg-success">Actif</span>
+                            @else
+                                <span class="badge bg-secondary">Inactif</span>
+                            @endif
+                        </dd>
+
+                        <dt class="col-sm-5 fw-bold text-muted">Types:</dt>
+                        <dd class="col-sm-7">
+                            <span class="badge bg-info">{{ $marque->typesBouteilles()->count() }}</span>
+                        </dd>
+
+                        <dt class="col-sm-5 fw-bold text-muted">Créée le:</dt>
+                        <dd class="col-sm-7 text-muted small">{{ $marque->created_at->format('d/m/Y H:i') }}</dd>
+
+                        <dt class="col-sm-5 fw-bold text-muted">Mise à jour:</dt>
+                        <dd class="col-sm-7 text-muted small">{{ $marque->updated_at->format('d/m/Y H:i') }}</dd>
+                    </dl>
+                </div>
+            </div>
+
+            <!-- Danger Zone -->
+            <div class="card border-danger border-2 shadow-sm">
+                <div class="card-header bg-danger bg-opacity-10 border-danger">
+                    <h5 class="card-title mb-0 text-danger">
+                        <i class="bi bi-exclamation-triangle"></i> Zone dangereuse
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted small mb-3">
+                        Cette action est irréversible. Supprimez cette marque de manière permanente.
+                    </p>
+                    <form id="deleteForm" action="{{ route('marques.destroy', $marque) }}" method="POST" style="display: none;">
+                        @csrf
+                        @method('DELETE')
+                    </form>
+                    <button type="button" class="btn btn-danger w-100" onclick="confirmDelete()">
+                        <i class="bi bi-trash"></i> Supprimer cette marque
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header border-danger bg-danger bg-opacity-10">
+                <h5 class="modal-title text-danger" id="deleteModalLabel">
+                    <i class="bi bi-exclamation-triangle"></i> Confirmer la suppression
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-0">
+                    Êtes-vous sûr de vouloir supprimer la marque 
+                    <strong>{{ $marque->nom }}</strong> ?
+                </p>
+                <p class="text-danger small mt-2">
+                    ⚠️ Cette action est irréversible et supprimera toutes les données associées.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="bi bi-x"></i> Annuler
+                </button>
+                <button type="button" class="btn btn-danger" onclick="deleteMarque()">
+                    <i class="bi bi-trash"></i> Supprimer définitivement
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function confirmDelete() {
+        const modal = new bootstrap.Modal(document.getElementById('deleteModal'));
+        modal.show();
+    }
+
+    function deleteMarque() {
+        document.getElementById('deleteForm').submit();
+    }
+</script>
+
+<style>
+    .card {
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    .card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+    }
+</style>
 @endsection

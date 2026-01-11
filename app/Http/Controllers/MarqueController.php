@@ -12,7 +12,7 @@ class MarqueController extends Controller
      */
     public function index()
     {
-        $marques = Marque::paginate(20);
+        $marques = Marque::latest()->paginate(20);
         return view('marques.index', compact('marques'));
     }
 

@@ -9,6 +9,7 @@ use App\Http\Controllers\Clients\ClientController;
 use App\Http\Controllers\MarqueController;
 use App\Http\Controllers\TypeBouteilleController;
 use App\Http\Controllers\FournisseurController;
+use App\Http\Controllers\RapportController;
 use App\Http\Controllers\Paiements\PaiementController;
 use App\Http\Controllers\Commandes\DetailCommandeController;
 
@@ -53,6 +54,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/', [ClientController::class, 'store'])->name('store');
         Route::get('/{client}/edit', [ClientController::class, 'edit'])->name('edit');
         Route::put('/{client}', [ClientController::class, 'update'])->name('update');
+        Route::delete('/{client}', [ClientController::class, 'destroy'])->name('destroy');
     });
 
     // Marques
@@ -107,4 +109,12 @@ Route::middleware('auth')->group(function () {
         Route::delete('/{detail}', [DetailCommandeController::class, 'destroy'])->name('destroy');
         Route::post('/{detail}/livraison', [DetailCommandeController::class, 'updateLivraison'])->name('update-livraison');
     });
+
+    // Rapports et Exportations
+    Route::prefix('rapports')->name('rapports.')->group(function () {
+        Route::get('/', [RapportController::class, 'index'])->name('index');
+        Route::get('/export', [RapportController::class, 'export'])->name('export');
+        Route::get('/export-pdf', [RapportController::class, 'exportPDF'])->name('export-pdf');
+    });
 });
+

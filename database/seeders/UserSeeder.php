@@ -10,31 +10,31 @@ class UserSeeder extends Seeder
 {
     public function run(): void
     {
-        User::create([
-            'username' => 'admin',
-            'nom_complet' => 'TAMBO SIMO Hedric',
-            'email' => 'simohedric2023@gmail.com',
-            'password' => Hash::make('password'),
-            'role' => 'admin',
-            'statut' => 'actif',
-        ]);
+        // Créer l'admin principal
+        User::firstOrCreate(
+            ['email' => 'simohedric2023@gmail.com'],
+            [
+                'username' => 'admin',
+                'nom_complet' => 'TAMBO SIMO Hedric',
+                'email' => 'simohedric2023@gmail.com',
+                'password' => Hash::make('password'),
+                'role' => 'admin',
+                'statut' => 'actif',
+            ]
+        );
 
-        User::create([
-            'username' => 'manager',
-            'nom_complet' => 'Manager Test',
-            'email' => 'manager@depotgaz.com',
-            'password' => Hash::make('password'),
-            'role' => 'manager',
-            'statut' => 'actif',
-        ]);
-
-        User::create([
-            'username' => 'vendeur',
-            'nom_complet' => 'Vendeur Test',
-            'email' => 'vendeur@depotgaz.com',
-            'password' => Hash::make('password'),
-            'role' => 'vendeur',
-            'statut' => 'actif',
-        ]);
+        // Créer un admin de test
+        User::firstOrCreate(
+            ['email' => 'admin@depotgaz.com'],
+            [
+                'username' => 'testadmin',
+                'nom_complet' => 'Admin Test',
+                'email' => 'admin@depotgaz.com',
+                'password' => Hash::make('password'),
+                'role' => 'admin',
+                'statut' => 'actif',
+            ]
+        );
     }
 }
+

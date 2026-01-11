@@ -1,59 +1,279 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🏭 Dépôt GAZ - Système de Gestion de Stock
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Système complet de gestion de stock pour dépôt de bouteilles de gaz. Application web moderne développée avec **Laravel 12** et **Bootstrap 5**.
 
-## About Laravel
+<div align="center">
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+![Laravel](https://img.shields.io/badge/Laravel-12.46-red?style=flat-square&logo=laravel)
+![PHP](https://img.shields.io/badge/PHP-8.4+-purple?style=flat-square&logo=php)
+![Database](https://img.shields.io/badge/MariaDB-11.8-blue?style=flat-square&logo=mariadb)
+![Bootstrap](https://img.shields.io/badge/Bootstrap-5-7952b3?style=flat-square&logo=bootstrap)
+![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+</div>
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 📋 Table des matières
 
-## Learning Laravel
+- [Fonctionnalités](#-fonctionnalités)
+- [Stack Technique](#-stack-technique)
+- [Installation](#-installation)
+- [Configuration](#-configuration)
+- [Utilisation](#-utilisation)
+- [Structure du Projet](#-structure-du-projet)
+- [API Endpoints](#-api-endpoints)
+- [Contribuer](#-contribuer)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## ✨ Fonctionnalités
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 📊 Dashboard Intégré
+- 📈 KPI en temps réel (Revenu, Transactions, Stock, Clients)
+- 📉 Graphiques de ventes (Derniers 7 jours)
+- 🎯 Top 5 produits les plus vendus
+- 📦 État du stock par type de bouteille
+- 🔔 Système d'alertes pour stocks faibles
+- 📝 Transactions récentes
 
-## Laravel Sponsors
+### 💾 Gestion de Stock
+- ✅ Suivi en temps réel des stocks (pleines/vides)
+- 🔄 Mouvements de stock traçables
+- ⚠️ Alertes de rupture de stock
+- 📊 Statistiques par type et marque
+- 🏷️ Gestion des types de bouteilles (tailles, prix)
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### 📋 Gestion des Clients
+- 👥 Base de données clients complète
+- 📞 Informations de contact
+- 🔒 Suivi des statuts (actif/inactif)
+- 📊 Historique des transactions par client
 
-### Premium Partners
+### 💰 Gestion des Transactions
+- 🛒  4 types de transactions (Achat Simple, Échange Simple, Échange Type, Échange Différé)
+- 💳 Modes de paiement variés
+- 📝 Détails complets (montant, consigne, réduction)
+- 🔐 Traçabilité complète avec utilisateur & date
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### 🏭 Gestion des Fournisseurs
+- 🏢 Base de données fournisseurs
+- 📝 Informations de contact
+- 💼 Historique des commandes
+- 📊 Statistiques des fournitures
 
-## Contributing
+### 📊 Système de Rapports et Exports
+- 📥 Exports multi-formats:
+  - 📊 **CSV** (Microsoft Excel compatible)
+  - 📋 **XLSX** (Format natif Excel)
+  - 📄 **PDF** (Rapports formatés)
+- 📈 Rapports disponibles:
+  - Clients
+  - Transactions détaillées (avec anonymisation)
+  - Stocks
+  - Fournisseurs
+  - Types de bouteilles
+  - Marques
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 🔐 Authentification Sécurisée
+- 🔑 Fortify authentication (Laravel)
+- 👤 Gestion des rôles utilisateurs
+- 🔒 Admin-only role simplifiée
+- 📱 Interface de login moderne
 
-## Code of Conduct
+## 🛠️ Stack Technique
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Backend
+- **Framework**: Laravel 12.46.0
+- **Language**: PHP 8.4.11
+- **ORM**: Eloquent
+- **Migrations**: Database schema versioning
+- **Authentication**: Laravel Fortify
 
-## Security Vulnerabilities
+### Frontend
+- **CSS Framework**: Bootstrap 5.3
+- **Icons**: Bootstrap Icons
+- **Charts**: Chart.js
+- **Template Engine**: Blade
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Database
+- **DBMS**: MariaDB 11.8.3
+- **Tables**: 21 tables
+- **Migrations**: Full versioning system
 
-## License
+### Libraries
+- **Excel Export**: maatwebsite/excel ^3.1
+- **PDF Generation**: barryvdh/laravel-dompdf ^3.1
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## 🚀 Installation
+
+### Prérequis
+- PHP 8.4+
+- Composer
+- MariaDB 11.8+
+- Node.js & npm (optionnel, pour assets)
+
+### Étapes
+
+1. **Cloner le repository**
+```bash
+git clone https://github.com/Eugene-Hed/depot_gaz.git
+cd depot_gaz
+```
+
+2. **Installer les dépendances**
+```bash
+composer install
+```
+
+3. **Configuration de l'environnement**
+```bash
+cp .env.example .env
+php artisan key:generate
+```
+
+4. **Configurer la base de données**
+Éditer `.env`:
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=depot_gaz
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+5. **Exécuter les migrations**
+```bash
+php artisan migrate
+```
+
+6. **Seeder la base de données** (optionnel)
+```bash
+php artisan db:seed
+```
+
+7. **Démarrer l'application**
+```bash
+php artisan serve
+```
+
+L'application est accessible à `http://localhost:8000`
+
+## ⚙️ Configuration
+
+### Fichiers de Configuration
+- `.env` - Variables d'environnement
+- `config/app.php` - Configuration globale
+- `config/database.php` - Connexion database
+- `config/fortify.php` - Authentification
+
+### Variables d'Environnement Importantes
+```env
+APP_NAME="Dépôt GAZ"
+APP_ENV=local
+APP_DEBUG=true
+DB_DATABASE=depot_gaz
+MAIL_MAILER=smtp
+```
+
+## 📖 Utilisation
+
+### Authentification
+1. Accéder à `http://localhost:8000/login`
+2. Identifiants de test:
+   - **Username**: `admin`
+   - **Password**: `password`
+
+### Dashboard
+- Vue d'ensemble de l'activité
+- Alertes en temps réel
+- Statistiques KPI
+- Graphiques de tendances
+
+### Gestion du Stock
+- Consulter les niveaux de stock
+- Enregistrer les mouvements
+- Voir les alertes de rupture
+
+### Exports
+- Naviguer vers **Rapports** → **Export**
+- Choisir le type de rapport
+- Sélectionner le format (CSV/XLSX/PDF)
+- Télécharger
+
+## 📁 Structure du Projet
+
+```
+depot_gaz/
+├── app/
+│   ├── Actions/          # Actions Fortify
+│   ├── Http/
+│   │   └── Controllers/  # Contrôleurs
+│   ├── Models/           # Modèles Eloquent
+│   └── Providers/        # Service providers
+├── config/               # Configuration
+├── database/
+│   ├── migrations/       # Migrations DB
+│   ├── seeders/          # Seeders
+│   └── factories/        # Factories
+├── resources/
+│   ├── views/            # Templates Blade
+│   │   ├── auth/         # Pages auth
+│   │   ├── dashboard/    # Dashboard
+│   │   └── rapports/     # Rapports
+│   └── css/js/          # Assets
+├── routes/
+│   └── web.php          # Routes
+├── storage/             # Fichiers générés
+├── tests/               # Tests
+├── public/              # Assets publics
+└── README.md
+```
+
+## 🔌 API Endpoints
+
+### Dashboard
+- `GET /dashboard` - Page principale
+
+### Stock
+- `GET /stocks` - Liste des stocks
+- `GET /stocks/{id}` - Détail du stock
+- `POST /stocks` - Créer un stock
+- `PUT /stocks/{id}` - Mettre à jour
+
+### Transactions
+- `GET /transactions` - Liste des transactions
+- `POST /transactions` - Enregistrer une transaction
+
+### Clients
+- `GET /clients` - Liste des clients
+- `POST /clients` - Créer un client
+
+### Rapports & Exports
+- `GET /rapports` - Page d'exports
+- `GET /rapports/export?type=X&format=Y` - Export CSV/XLSX
+- `GET /rapports/export-pdf?type=X` - Export PDF
+
+## 🤝 Contribuer
+
+Les contributions sont bienvenues! Pour contribuer:
+
+1. Fork le projet
+2. Créer une branche (`git checkout -b feature/AmazingFeature`)
+3. Commit les changements (`git commit -m 'Add amazing feature'`)
+4. Push vers la branche (`git push origin feature/AmazingFeature`)
+5. Ouvrir une Pull Request
+
+## 📝 License
+
+Ce projet est sous license MIT. Voir le fichier `LICENSE` pour plus de détails.
+
+## ✉️ Contact
+
+**Eugene-Hed** - [GitHub](https://github.com/Eugene-Hed)
+
+---
+
+<div align="center">
+
+**Fait avec ❤️ pour la gestion efficace des dépôts de gaz**
+
+</div>
+

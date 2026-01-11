@@ -51,7 +51,7 @@
             <nav class="col-md-2 sidebar">
                 <div class="text-center mb-4">
                     <h5 class="text-white">{{ config('app.name') }}</h5>
-                    <small class="text-muted">{{ Auth::user()->role }}</small>
+                    <small class="text-muted">Administrateur</small>
                 </div>
 
                 <ul class="nav flex-column">
@@ -83,7 +83,14 @@
                         </a>
                     </li>
 
-                    @if(Auth::user()->role === 'admin')
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->routeIs('rapports.*') ? 'active' : '' }}"
+                            href="{{ route('rapports.index') }}">
+                            <i class="bi bi-file-earmark-arrow-down"></i> Rapports
+                        </a>
+                    </li>
+
+                    @if(Auth::check())
                         <hr class="bg-secondary">
                         <li class="nav-item">
                             <a class="nav-link" href="#settings" data-bs-toggle="collapse">

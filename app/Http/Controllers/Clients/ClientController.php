@@ -10,7 +10,7 @@ class ClientController extends Controller
 {
     public function index()
     {
-        $clients = Client::paginate(20);
+        $clients = Client::latest()->paginate(20);
         return view('clients.index', compact('clients'));
     }
 
@@ -50,5 +50,11 @@ class ClientController extends Controller
         $client->update($validated);
 
         return redirect()->route('clients.index')->with('success', 'Client mis à jour');
+    }
+
+    public function destroy(Client $client)
+    {
+        $client->delete();
+        return redirect()->route('clients.index')->with('success', 'Client supprimé avec succès');
     }
 }

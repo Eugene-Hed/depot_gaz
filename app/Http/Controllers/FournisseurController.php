@@ -12,7 +12,7 @@ class FournisseurController extends Controller
      */
     public function index()
     {
-        $fournisseurs = Fournisseur::paginate(20);
+        $fournisseurs = Fournisseur::latest()->paginate(20);
         return view('fournisseurs.index', compact('fournisseurs'));
     }
 

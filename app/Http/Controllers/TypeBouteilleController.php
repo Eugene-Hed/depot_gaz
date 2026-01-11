@@ -13,7 +13,7 @@ class TypeBouteilleController extends Controller
      */
     public function index()
     {
-        $types = TypeBouteille::with('marque')->paginate(20);
+        $types = TypeBouteille::with('marque')->latest()->paginate(20);
         return view('types_bouteilles.index', compact('types'));
     }
 
@@ -32,11 +32,9 @@ class TypeBouteilleController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'nom' => 'required|string|max:255',
             'taille' => 'required|string|max:100',
             'id_marque' => 'required|exists:marques,id',
             'prix_vente' => 'required|numeric|min:0',
-            'prix_consigne' => 'required|numeric|min:0',
             'prix_recharge' => 'required|numeric|min:0',
             'seuil_alerte' => 'required|integer|min:0',
             'statut' => 'required|in:actif,inactif',
@@ -73,11 +71,9 @@ class TypeBouteilleController extends Controller
     public function update(Request $request, TypeBouteille $typeBouteille)
     {
         $validated = $request->validate([
-            'nom' => 'required|string|max:255',
             'taille' => 'required|string|max:100',
             'id_marque' => 'required|exists:marques,id',
             'prix_vente' => 'required|numeric|min:0',
-            'prix_consigne' => 'required|numeric|min:0',
             'prix_recharge' => 'required|numeric|min:0',
             'seuil_alerte' => 'required|integer|min:0',
             'statut' => 'required|in:actif,inactif',
