@@ -41,7 +41,6 @@ class StockController extends Controller
     public function create()
     {
         $typesBouteilles = TypeBouteille::with('marque')
-            ->where('statut', 'actif')
             ->get();
 
         return view('stocks.create', compact('typesBouteilles'));

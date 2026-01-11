@@ -41,7 +41,7 @@
                             <select class="form-select form-select-lg @error('id_type_bouteille') is-invalid @enderror" 
                                 id="id_type_bouteille" name="id_type_bouteille" required onchange="updateStockInfo()">
                                 <option value="">-- Sélectionner une bouteille --</option>
-                                @foreach($types as $type)
+                                @foreach($typesBouteilles as $type)
                                     <option value="{{ $type->id }}" 
                                         data-seuil="{{ $type->seuil_alerte }}"
                                         data-taille="{{ $type->taille }}"

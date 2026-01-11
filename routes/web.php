@@ -33,6 +33,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/', [StockController::class, 'index'])->name('index');
         Route::get('/create', [StockController::class, 'create'])->name('create');
         Route::post('/', [StockController::class, 'store'])->name('store');
+        Route::get('/{stock}', [StockController::class, 'show'])->name('show');
         Route::get('/{stock}/edit', [StockController::class, 'edit'])->name('edit');
         Route::put('/{stock}', [StockController::class, 'update'])->name('update');
     });

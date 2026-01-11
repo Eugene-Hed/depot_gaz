@@ -23,7 +23,7 @@ class TransactionController extends Controller
     public function create()
     {
         $types = TypeBouteille::with(['marque', 'stock'])->get();
-        $clients = Client::where('statut', 'actif')->get();
+        $clients = Client::get();
         return view('transactions.create', compact('types', 'clients'));
     }
 
