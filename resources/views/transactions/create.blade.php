@@ -29,36 +29,38 @@
                             <label for="type" class="form-label fw-bold">
                                 <i class="bi bi-arrow-left-right"></i> Type de transaction *
                             </label>
-                            <div class="btn-group d-flex" role="group" style="gap: 0.5rem;">
-                                <input type="radio" class="btn-check" name="type" id="type_vente" 
-                                    value="vente" {{ old('type') == 'vente' || !old('type') ? 'checked' : '' }}>
-                                <label class="btn btn-outline-success" for="type_vente">
-                                    <i class="bi bi-bag-check"></i> Vente
-                                </label>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <input type="radio" class="btn-check" name="type" id="type_echange_simple" 
+                                        value="echange_simple" {{ old('type') == 'echange_simple' || !old('type') ? 'checked' : '' }}>
+                                    <label class="btn btn-outline-success w-100" for="type_echange_simple">
+                                        <i class="bi bi-arrow-left-right"></i> Échange simple
+                                    </label>
+                                </div>
 
-                                <input type="radio" class="btn-check" name="type" id="type_retour" 
-                                    value="retour" {{ old('type') == 'retour' ? 'checked' : '' }}>
-                                <label class="btn btn-outline-danger" for="type_retour">
-                                    <i class="bi bi-arrow-counterclockwise"></i> Retour
-                                </label>
+                                <div class="col-md-6">
+                                    <input type="radio" class="btn-check" name="type" id="type_echange_type" 
+                                        value="echange_type" {{ old('type') == 'echange_type' ? 'checked' : '' }}>
+                                    <label class="btn btn-outline-warning w-100" for="type_echange_type">
+                                        <i class="bi bi-arrow-left-right"></i> Échange type
+                                    </label>
+                                </div>
 
-                                <input type="radio" class="btn-check" name="type" id="type_recharge" 
-                                    value="recharge" {{ old('type') == 'recharge' ? 'checked' : '' }}>
-                                <label class="btn btn-outline-info" for="type_recharge">
-                                    <i class="bi bi-arrow-down"></i> Recharge
-                                </label>
+                                <div class="col-md-6 mt-2">
+                                    <input type="radio" class="btn-check" name="type" id="type_achat_simple" 
+                                        value="achat_simple" {{ old('type') == 'achat_simple' ? 'checked' : '' }}>
+                                    <label class="btn btn-outline-primary w-100" for="type_achat_simple">
+                                        <i class="bi bi-bag-plus"></i> Achat simple
+                                    </label>
+                                </div>
 
-                                <input type="radio" class="btn-check" name="type" id="type_echange" 
-                                    value="echange" {{ old('type') == 'echange' ? 'checked' : '' }}>
-                                <label class="btn btn-outline-warning" for="type_echange">
-                                    <i class="bi bi-arrow-left-right"></i> Échange
-                                </label>
-
-                                <input type="radio" class="btn-check" name="type" id="type_consigne" 
-                                    value="consigne" {{ old('type') == 'consigne' ? 'checked' : '' }}>
-                                <label class="btn btn-outline-secondary" for="type_consigne">
-                                    <i class="bi bi-key"></i> Consigne
-                                </label>
+                                <div class="col-md-6 mt-2">
+                                    <input type="radio" class="btn-check" name="type" id="type_echange_differe" 
+                                        value="echange_differe" {{ old('type') == 'echange_differe' ? 'checked' : '' }}>
+                                    <label class="btn btn-outline-info w-100" for="type_echange_differe">
+                                        <i class="bi bi-hourglass-split"></i> Échange différé
+                                    </label>
+                                </div>
                             </div>
                             @error('type')
                                 <span class="invalid-feedback d-block">{{ $message }}</span>
@@ -84,11 +86,11 @@
                             @enderror
                         </div>
 
-                        <!-- Produit et quantité -->
+                        <!-- Produit et ancien produit (pour échange type) -->
                         <div class="row mb-4">
                             <div class="col-md-6">
                                 <label for="id_type_bouteille" class="form-label fw-bold">
-                                    <i class="bi bi-box"></i> Produit *
+                                    <i class="bi bi-box"></i> Produit reçu *
                                 </label>
                                 <select class="form-select form-select-lg @error('id_type_bouteille') is-invalid @enderror" 
                                     id="id_type_bouteille" name="id_type_bouteille" required onchange="updatePrice()">
@@ -111,15 +113,31 @@
                             </div>
 
                             <div class="col-md-6">
-                                <label for="quantite" class="form-label fw-bold">
-                                    <i class="bi bi-123"></i> Quantité *
+                                <label for="id_type_ancien" class="form-label fw-bold" id="label-ancien" style="display: none;">
+                                    <i class="bi bi-box"></i> Produit ancien (échange type)
                                 </label>
-                                <input type="number" class="form-control form-control-lg @error('quantite') is-invalid @enderror" 
-                                    id="quantite" name="quantite" value="{{ old('quantite', 1) }}" min="1" required onchange="updateTotal()">
-                                @error('quantite')
-                                    <span class="invalid-feedback">{{ $message }}</span>
-                                @enderror
+                                <select class="form-select form-select-lg" 
+                                    id="id_type_ancien" name="id_type_ancien" style="display: none;">
+                                    <option value="">-- Sélectionner un produit --</option>
+                                    @foreach($types as $type)
+                                        <option value="{{ $type->id }}" {{ old('id_type_ancien') == $type->id ? 'selected' : '' }}>
+                                            {{ $type->marque->nom }} - {{ $type->nom }} ({{ $type->taille }}L)
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
+                        </div>
+
+                        <!-- Quantité -->
+                        <div class="mb-4">
+                            <label for="quantite" class="form-label fw-bold">
+                                <i class="bi bi-123"></i> Quantité *
+                            </label>
+                            <input type="number" class="form-control form-control-lg @error('quantite') is-invalid @enderror" 
+                                id="quantite" name="quantite" value="{{ old('quantite', 1) }}" min="1" required onchange="updateTotal()">
+                            @error('quantite')
+                                <span class="invalid-feedback">{{ $message }}</span>
+                            @enderror
                         </div>
 
                         <!-- Prix -->
@@ -206,36 +224,52 @@
                 </div>
                 <div class="card-body">
                     <div class="mb-3">
-                        <p class="mb-2"><strong class="text-success">Vente</strong></p>
-                        <p class="small text-muted">Transaction de vente classique. Le client reçoit les bouteilles.</p>
+                        <p class="mb-2">
+                            <span class="badge bg-success">Échange simple</span>
+                        </p>
+                        <p class="small text-muted">
+                            Client retourne une bouteille vide du <strong>même type</strong> et reçoit une bouteille pleine en échange.
+                        </p>
                     </div>
 
                     <hr>
 
                     <div class="mb-3">
-                        <p class="mb-2"><strong class="text-danger">Retour</strong></p>
-                        <p class="small text-muted">Retour de bouteilles vides par le client. Augmente le stock de vides.</p>
+                        <p class="mb-2">
+                            <span class="badge bg-warning">Échange type</span>
+                        </p>
+                        <p class="small text-muted">
+                            Client retourne une bouteille vide d'un type et reçoit une bouteille pleine d'un <strong>autre type</strong>.
+                        </p>
                     </div>
 
                     <hr>
 
                     <div class="mb-3">
-                        <p class="mb-2"><strong class="text-info">Recharge</strong></p>
-                        <p class="small text-muted">Remplissage de bouteilles vides. Convertit vides → pleines.</p>
-                    </div>
-
-                    <hr>
-
-                    <div class="mb-3">
-                        <p class="mb-2"><strong class="text-warning">Échange</strong></p>
-                        <p class="small text-muted">Échange de bouteilles. Client retourne des vides et reçoit des pleines.</p>
+                        <p class="mb-2">
+                            <span class="badge bg-primary">Achat simple</span>
+                        </p>
+                        <p class="small text-muted">
+                            Client achète une bouteille pleine <strong>sans retourner de vide</strong>. (Nouveau client ou vente standard)
+                        </p>
                     </div>
 
                     <hr>
 
                     <div>
-                        <p class="mb-2"><strong class="text-secondary">Consigne</strong></p>
-                        <p class="small text-muted">Consignation de bouteilles. Dépôt sans vente immédiate.</p>
+                        <p class="mb-2">
+                            <span class="badge bg-info">Échange différé</span>
+                        </p>
+                        <p class="small text-muted">
+                            Client retourne une vide d'un type, reçoit une pleine d'un autre type, mais s'engage à retourner la pleine du type initial lors du prochain achat.
+                        </p>
+                    </div>
+
+                    <hr class="my-3">
+
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle"></i>
+                        <strong>Rappel:</strong> Le gérant fixe le prix de chaque transaction manuellement.
                     </div>
                 </div>
             </div>
@@ -252,10 +286,8 @@
             document.getElementById('prix-info').textContent = prix + ' F';
             document.getElementById('stock-info').textContent = stock;
             
-            if (parseInt(document.getElementById('prix_unitaire').value) === 0) {
-                document.getElementById('prix_unitaire').value = prix;
-            }
             updateTotal();
+            toggleEchangeTypeFields();
         }
 
         function updateTotal() {
@@ -264,6 +296,25 @@
             const total = prix * qte;
             document.getElementById('montant_total').value = total.toFixed(0);
         }
+
+        function toggleEchangeTypeFields() {
+            const type = document.querySelector('input[name="type"]:checked').value;
+            const labelAncien = document.getElementById('label-ancien');
+            const selectAncien = document.getElementById('id_type_ancien');
+
+            if (type === 'echange_type' || type === 'echange_differe') {
+                labelAncien.style.display = 'block';
+                selectAncien.style.display = 'block';
+            } else {
+                labelAncien.style.display = 'none';
+                selectAncien.style.display = 'none';
+            }
+        }
+
+        // Ajouter les listeners pour les radios
+        document.querySelectorAll('input[name="type"]').forEach(radio => {
+            radio.addEventListener('change', toggleEchangeTypeFields);
+        });
 
         // Initialiser au chargement
         updatePrice();

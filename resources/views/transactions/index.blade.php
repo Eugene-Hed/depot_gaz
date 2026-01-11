@@ -124,20 +124,17 @@
                             </td>
                             <td class="text-center">
                                 @switch($trans->type)
-                                    @case('vente')
-                                        <span class="badge bg-success"><i class="bi bi-bag-check"></i> Vente</span>
+                                    @case('echange_simple')
+                                        <span class="badge bg-success"><i class="bi bi-arrow-left-right"></i> Échange simple</span>
                                         @break
-                                    @case('retour')
-                                        <span class="badge bg-danger"><i class="bi bi-arrow-counterclockwise"></i> Retour</span>
+                                    @case('echange_type')
+                                        <span class="badge bg-warning"><i class="bi bi-arrow-left-right"></i> Échange type</span>
                                         @break
-                                    @case('recharge')
-                                        <span class="badge bg-info"><i class="bi bi-arrow-down"></i> Recharge</span>
+                                    @case('achat_simple')
+                                        <span class="badge bg-primary"><i class="bi bi-bag-plus"></i> Achat simple</span>
                                         @break
-                                    @case('echange')
-                                        <span class="badge bg-warning"><i class="bi bi-arrow-left-right"></i> Échange</span>
-                                        @break
-                                    @case('consigne')
-                                        <span class="badge bg-secondary"><i class="bi bi-key"></i> Consigne</span>
+                                    @case('echange_differe')
+                                        <span class="badge bg-info"><i class="bi bi-hourglass-split"></i> Échange différé</span>
                                         @break
                                     @default
                                         <span class="badge bg-light text-dark">{{ $trans->type }}</span>
