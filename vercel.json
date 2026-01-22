@@ -1,5 +1,6 @@
 {
-  "buildCommand": "npm install && npm run build && composer install --no-dev --optimize-autoloader",
+  "buildCommand": "npm install && npm run build",
+  "installCommand": "composer install --no-dev --optimize-autoloader",
   "outputDirectory": "public",
   "env": {
     "APP_ENV": "production",
