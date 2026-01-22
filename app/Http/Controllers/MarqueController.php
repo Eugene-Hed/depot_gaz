@@ -32,9 +32,18 @@ class MarqueController extends Controller
         $validated = $request->validate([
             'nom' => 'required|string|max:255|unique:marques',
             'statut' => 'required|in:actif,inactif',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
         try {
+            // Upload de l'image si présente
+            if ($request->hasFile('image')) {
+                $image = $request->file('image');
+                $imageName = time() . '_' . str_replace(' ', '_', $image->getClientOriginalName());
+                $image->storeAs('marques', $imageName, 'public');
+                $validated['image'] = $imageName;
+            }
+            
             Marque::create($validated);
 
             return redirect()
@@ -63,9 +72,26 @@ class MarqueController extends Controller
         $validated = $request->validate([
             'nom' => 'required|string|max:255|unique:marques,nom,' . $marque->id,
             'statut' => 'required|in:actif,inactif',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
         try {
+            // Retirer le champ image des données validées
+            unset($validated['image']);
+            
+            // Upload de la nouvelle image si présente
+            if ($request->hasFile('image')) {
+                // Supprimer l'ancienne image si elle existe
+                if ($marque->image) {
+                    \Storage::disk('public')->delete('marques/' . $marque->image);
+                }
+                
+                $image = $request->file('image');
+                $imageName = time() . '_' . str_replace(' ', '_', $image->getClientOriginalName());
+                $image->storeAs('marques', $imageName, 'public');
+                $validated['image'] = $imageName;
+            }
+            
             $marque->update($validated);
 
             return redirect()
@@ -84,6 +110,11 @@ class MarqueController extends Controller
     public function destroy(Marque $marque)
     {
         try {
+            // Supprimer l'image si elle existe
+            if ($marque->image) {
+                \Storage::disk('public')->delete('marques/' . $marque->image);
+            }
+            
             $marque->delete();
 
             return redirect()

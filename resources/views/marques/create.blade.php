@@ -29,7 +29,7 @@
                         </div>
                     @endif
 
-                    <form action="{{ route('marques.store') }}" method="POST">
+                    <form action="{{ route('marques.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
 
                         <!-- Nom -->
@@ -44,6 +44,24 @@
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
                             @enderror
                             <small class="text-muted d-block mt-2">Nom unique de la marque</small>
+                        </div>
+
+                        <!-- Image/Logo -->
+                        <div class="mb-4">
+                            <label for="image" class="form-label fw-bold">
+                                <i class="bi bi-image"></i> Logo de la marque
+                            </label>
+                            <input type="file" class="form-control form-control-lg @error('image') is-invalid @enderror" 
+                                   id="image" name="image" accept="image/jpeg,image/png,image/jpg,image/gif,image/svg+xml">
+                            @error('image')
+                                <span class="invalid-feedback">{{ $message }}</span>
+                            @enderror
+                            <small class="text-muted d-block mt-2">
+                                <i class="bi bi-info-circle"></i> Format: JPG, PNG, GIF, SVG. Taille max: 2MB
+                            </small>
+                            <div class="mt-2">
+                                <img id="preview" src="" alt="Aperçu" class="rounded" style="display: none; max-width: 150px; max-height: 150px;">
+                            </div>
                         </div>
 
                         <!-- Statut -->
@@ -122,7 +140,7 @@
 
                     <div class="alert alert-info small">
                         <i class="bi bi-lightbulb"></i>
-                        <strong>Conseil:</strong> Assurez-vous que le nom est correct avant de créer la marque.
+                        <strong>Conseil:</strong> Ajoutez un logo pour identifier rapidement la marque.
                     </div>
                 </div>
             </div>
@@ -140,4 +158,23 @@
         box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
     }
 </style>
+
+<script>
+    // Aperçu de l'image
+    document.getElementById('image').addEventListener('change', function(e) {
+        const preview = document.getElementById('preview');
+        const file = e.target.files[0];
+        
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+            }
+            reader.readAsDataURL(file);
+        } else {
+            preview.style.display = 'none';
+        }
+    });
+</script>
 @endsection

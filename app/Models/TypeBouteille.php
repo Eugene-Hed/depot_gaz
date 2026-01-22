@@ -10,12 +10,22 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class TypeBouteille extends Model
 {
     protected $table = 'types_bouteilles';
-    protected $fillable = ['taille', 'marque_id', 'prix_vente', 'prix_consigne', 'prix_recharge', 'seuil_alerte', 'statut'];
+    protected $fillable = ['taille', 'marque_id', 'prix_vente', 'prix_consigne', 'prix_recharge', 'seuil_alerte', 'image', 'statut'];
     protected $casts = [
         'prix_vente' => 'decimal:2',
         'prix_consigne' => 'decimal:2',
         'prix_recharge' => 'decimal:2',
     ];
+    
+    protected $appends = ['image_url'];
+    
+    public function getImageUrlAttribute()
+    {
+        if ($this->image) {
+            return asset('storage/bouteilles/' . $this->image);
+        }
+        return asset('images/bouteille-default.png');
+    }
 
     public function marque(): BelongsTo
     {

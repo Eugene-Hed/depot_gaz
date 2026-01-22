@@ -95,6 +95,7 @@
             <table class="table table-hover mb-0">
                 <thead class="table-light">
                     <tr>
+                        <th>Logo</th>
                         <th>Nom</th>
                         <th class="text-center">Types</th>
                         <th class="text-center">Statut</th>
@@ -105,6 +106,12 @@
                 <tbody>
                     @forelse ($marques as $marque)
                         <tr>
+                            <td>
+                                <img src="{{ $marque->image_url }}" 
+                                     alt="{{ $marque->nom }}" 
+                                     class="rounded"
+                                     style="width: 40px; height: 40px; object-fit: contain; background: #f8f9fa; padding: 5px;">
+                            </td>
                             <td>
                                 <strong class="text-dark">{{ $marque->nom }}</strong>
                             </td>

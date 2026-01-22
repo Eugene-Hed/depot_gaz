@@ -1,69 +1,65 @@
-# 🏭 Dépôt GAZ - Système de Gestion de Stock
+# Dépôt GAZ - Système de Gestion de Stock
 
-Système complet de gestion de stock pour dépôt de bouteilles de gaz. Application web moderne développée avec **Laravel 12** et **Bootstrap 5**.
+Système complet de gestion de stock pour dépôt de bouteilles de gaz. Application web moderne développée avec Laravel 12 et Bootstrap 5.
 
-<div align="center">
+## Table des matières
 
-![Laravel](https://img.shields.io/badge/Laravel-12.46-red?style=flat-square&logo=laravel)
-![PHP](https://img.shields.io/badge/PHP-8.4+-purple?style=flat-square&logo=php)
-![Database](https://img.shields.io/badge/MariaDB-11.8-blue?style=flat-square&logo=mariadb)
-![Bootstrap](https://img.shields.io/badge/Bootstrap-5-7952b3?style=flat-square&logo=bootstrap)
-![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
+- [Fonctionnalités](#fonctionnalités)
+- [Stack Technique](#stack-technique)
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Utilisation](#utilisation)
+- [Structure du Projet](#structure-du-projet)
+- [API Endpoints](#api-endpoints)
+- [Contribuer](#contribuer)
 
-</div>
+## Fonctionnalités
 
-## 📋 Table des matières
+### Dashboard Intégré
+- KPI en temps réel (Revenu, Transactions, Stock, Clients)
+- Graphiques de ventes (Derniers 7 jours)
+- Top 5 produits les plus vendus
+- État du stock par type de bouteille
+- Système d'alertes pour stocks faibles
+- Transactions récentes
 
-- [Fonctionnalités](#-fonctionnalités)
-- [Stack Technique](#-stack-technique)
-- [Installation](#-installation)
-- [Configuration](#-configuration)
-- [Utilisation](#-utilisation)
-- [Structure du Projet](#-structure-du-projet)
-- [API Endpoints](#-api-endpoints)
-- [Contribuer](#-contribuer)
+### Gestion de Stock
+- Suivi en temps réel des stocks (pleines/vides)
+- Mouvements de stock traçables
+- Alertes de rupture de stock
+- Statistiques par type et marque
+- Gestion des types de bouteilles avec images (tailles, prix)
 
-## ✨ Fonctionnalités
+### Gestion des Clients
+- Base de données clients complète
+- Informations de contact
+- Suivi des statuts (actif/inactif)
+- Historique des transactions par client
 
-### 📊 Dashboard Intégré
-- 📈 KPI en temps réel (Revenu, Transactions, Stock, Clients)
-- 📉 Graphiques de ventes (Derniers 7 jours)
-- 🎯 Top 5 produits les plus vendus
-- 📦 État du stock par type de bouteille
-- 🔔 Système d'alertes pour stocks faibles
-- 📝 Transactions récentes
+### Gestion des Transactions
+- 4 types de transactions (Achat Simple, Échange Simple, Échange Type, Échange Différé)
+- Modes de paiement variés
+- Détails complets (montant, consigne, réduction)
+- Traçabilité complète avec utilisateur et date
 
-### 💾 Gestion de Stock
-- ✅ Suivi en temps réel des stocks (pleines/vides)
-- 🔄 Mouvements de stock traçables
-- ⚠️ Alertes de rupture de stock
-- 📊 Statistiques par type et marque
-- 🏷️ Gestion des types de bouteilles (tailles, prix)
+### Gestion des Marques
+- Base de données des marques de bouteilles
+- Upload de logos pour identification visuelle
+- Suivi des types de bouteilles par marque
+- Gestion du statut (actif/inactif)
 
-### 📋 Gestion des Clients
-- 👥 Base de données clients complète
-- 📞 Informations de contact
-- 🔒 Suivi des statuts (actif/inactif)
-- 📊 Historique des transactions par client
+### Gestion des Fournisseurs
+- Base de données fournisseurs
+- Informations de contact
+- Historique des commandes
+- Statistiques des fournitures
 
-### 💰 Gestion des Transactions
-- 🛒  4 types de transactions (Achat Simple, Échange Simple, Échange Type, Échange Différé)
-- 💳 Modes de paiement variés
-- 📝 Détails complets (montant, consigne, réduction)
-- 🔐 Traçabilité complète avec utilisateur & date
-
-### 🏭 Gestion des Fournisseurs
-- 🏢 Base de données fournisseurs
-- 📝 Informations de contact
-- 💼 Historique des commandes
-- 📊 Statistiques des fournitures
-
-### 📊 Système de Rapports et Exports
-- 📥 Exports multi-formats:
-  - 📊 **CSV** (Microsoft Excel compatible)
-  - 📋 **XLSX** (Format natif Excel)
-  - 📄 **PDF** (Rapports formatés)
-- 📈 Rapports disponibles:
+### Système de Rapports et Exports
+- Exports multi-formats:
+  - CSV (Microsoft Excel compatible)
+  - XLSX (Format natif Excel)
+  - PDF (Rapports formatés)
+- Rapports disponibles:
   - Clients
   - Transactions détaillées (avec anonymisation)
   - Stocks
@@ -71,13 +67,13 @@ Système complet de gestion de stock pour dépôt de bouteilles de gaz. Applicat
   - Types de bouteilles
   - Marques
 
-### 🔐 Authentification Sécurisée
-- 🔑 Fortify authentication (Laravel)
-- 👤 Gestion des rôles utilisateurs
-- 🔒 Admin-only role simplifiée
-- 📱 Interface de login moderne
+### Authentification Sécurisée
+- Fortify authentication (Laravel)
+- Gestion des rôles utilisateurs
+- Admin-only role simplifiée
+- Interface de login moderne
 
-## 🛠️ Stack Technique
+## Stack Technique
 
 ### Backend
 - **Framework**: Laravel 12.46.0
@@ -101,7 +97,7 @@ Système complet de gestion de stock pour dépôt de bouteilles de gaz. Applicat
 - **Excel Export**: maatwebsite/excel ^3.1
 - **PDF Generation**: barryvdh/laravel-dompdf ^3.1
 
-## 🚀 Installation
+## Installation
 
 ### Prérequis
 - PHP 8.4+
@@ -156,7 +152,7 @@ php artisan serve
 
 L'application est accessible à `http://localhost:8000`
 
-## ⚙️ Configuration
+## Configuration
 
 ### Fichiers de Configuration
 - `.env` - Variables d'environnement
@@ -173,7 +169,7 @@ DB_DATABASE=depot_gaz
 MAIL_MAILER=smtp
 ```
 
-## 📖 Utilisation
+## Utilisation
 
 ### Authentification
 1. Accéder à `http://localhost:8000/login`
@@ -198,7 +194,7 @@ MAIL_MAILER=smtp
 - Sélectionner le format (CSV/XLSX/PDF)
 - Télécharger
 
-## 📁 Structure du Projet
+## Structure du Projet
 
 ```
 depot_gaz/
@@ -227,7 +223,7 @@ depot_gaz/
 └── README.md
 ```
 
-## 🔌 API Endpoints
+## API Endpoints
 
 ### Dashboard
 - `GET /dashboard` - Page principale
@@ -251,7 +247,7 @@ depot_gaz/
 - `GET /rapports/export?type=X&format=Y` - Export CSV/XLSX
 - `GET /rapports/export-pdf?type=X` - Export PDF
 
-## 🤝 Contribuer
+## Contribuer
 
 Les contributions sont bienvenues! Pour contribuer:
 
@@ -261,19 +257,15 @@ Les contributions sont bienvenues! Pour contribuer:
 4. Push vers la branche (`git push origin feature/AmazingFeature`)
 5. Ouvrir une Pull Request
 
-## 📝 License
+## License
 
 Ce projet est sous license MIT. Voir le fichier `LICENSE` pour plus de détails.
 
-## ✉️ Contact
+## Contact
 
 **Eugene-Hed** - [GitHub](https://github.com/Eugene-Hed)
 
 ---
 
-<div align="center">
-
-**Fait avec ❤️ pour la gestion efficace des dépôts de gaz**
-
-</div>
+Fait pour la gestion efficace des dépôts de gaz
 

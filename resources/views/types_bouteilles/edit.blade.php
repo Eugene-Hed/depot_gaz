@@ -18,7 +18,7 @@
         <div class="col-lg-8">
             <div class="card border-0 shadow-sm">
                 <div class="card-body p-4">
-                    <form action="{{ route('types-bouteilles.update', $typeBouteille) }}" method="POST">
+                    <form action="{{ route('types-bouteilles.update', $typeBouteille) }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
 
@@ -53,6 +53,31 @@
                                 @error('taille')
                                     <div class="invalid-feedback d-block">{{ $message }}</div>
                                 @enderror
+                            </div>
+                        </div>
+
+                        <!-- Image -->
+                        <div class="mb-4">
+                            <label for="image" class="form-label fw-bold">
+                                <i class="bi bi-image"></i> Image de la bouteille
+                            </label>
+                            @if($typeBouteille->image)
+                                <div class="mb-2">
+                                    <img src="{{ $typeBouteille->image_url }}" alt="Image actuelle" 
+                                         class="rounded border" style="max-width: 150px; max-height: 150px;">
+                                    <p class="text-muted small mt-1">Image actuelle</p>
+                                </div>
+                            @endif
+                            <input type="file" class="form-control form-control-lg @error('image') is-invalid @enderror" 
+                                   id="image" name="image" accept="image/jpeg,image/png,image/jpg,image/gif">
+                            @error('image')
+                                <span class="invalid-feedback">{{ $message }}</span>
+                            @enderror
+                            <small class="text-muted d-block mt-2">
+                                <i class="bi bi-info-circle"></i> Format: JPG, PNG, GIF. Taille max: 2MB. Laissez vide pour conserver l'image actuelle.
+                            </small>
+                            <div class="mt-2">
+                                <img id="preview" src="" alt="Aperçu" class="rounded border" style="display: none; max-width: 200px; max-height: 200px;">
                             </div>
                         </div>
 
@@ -245,5 +270,19 @@
     function deleteType() {
         document.getElementById('deleteForm').submit();
     }
+
+    // Aperçu de l'image
+    document.getElementById('image').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const preview = document.getElementById('preview');
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+    });
 </script>
 @endsection

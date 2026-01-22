@@ -28,7 +28,7 @@
                         </div>
                     @endif
 
-                    <form action="{{ route('types-bouteilles.store') }}" method="POST">
+                    <form action="{{ route('types-bouteilles.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
 
                         <!-- Marque et Taille -->
@@ -62,6 +62,24 @@
                                 @error('taille')
                                     <span class="invalid-feedback">{{ $message }}</span>
                                 @enderror
+                            </div>
+                        </div>
+
+                        <!-- Image -->
+                        <div class="mb-4">
+                            <label for="image" class="form-label fw-bold">
+                                <i class="bi bi-image"></i> Image de la bouteille
+                            </label>
+                            <input type="file" class="form-control form-control-lg @error('image') is-invalid @enderror" 
+                                   id="image" name="image" accept="image/jpeg,image/png,image/jpg,image/gif">
+                            @error('image')
+                                <span class="invalid-feedback">{{ $message }}</span>
+                            @enderror
+                            <small class="text-muted d-block mt-2">
+                                <i class="bi bi-info-circle"></i> Format: JPG, PNG, GIF. Taille max: 2MB
+                            </small>
+                            <div class="mt-2">
+                                <img id="preview" src="" alt="Aperçu" class="rounded" style="display: none; max-width: 200px; max-height: 200px;">
                             </div>
                         </div>
 
@@ -193,4 +211,20 @@
             box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
         }
     </style>
+
+    <script>
+        // Aperçu de l'image
+        document.getElementById('image').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.getElementById('preview');
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
 @endsection

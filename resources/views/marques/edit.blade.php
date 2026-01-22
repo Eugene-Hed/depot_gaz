@@ -18,7 +18,7 @@
         <div class="col-lg-8">
             <div class="card border-0 shadow-sm">
                 <div class="card-body p-4">
-                    <form action="{{ route('marques.update', $marque) }}" method="POST">
+                    <form action="{{ route('marques.update', $marque) }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
 
@@ -33,6 +33,32 @@
                             @error('nom')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
                             @enderror
+                        </div>
+
+                        <!-- Image/Logo -->
+                        <div class="mb-4">
+                            <label for="image" class="form-label fw-bold">
+                                <i class="bi bi-image"></i> Logo de la marque
+                            </label>
+                            
+                            @if($marque->image)
+                                <div class="mb-2">
+                                    <img src="{{ $marque->image_url }}" alt="{{ $marque->nom }}" class="rounded border" style="max-width: 150px; max-height: 150px; object-fit: contain;">
+                                    <p class="small text-muted mt-1">Logo actuel</p>
+                                </div>
+                            @endif
+                            
+                            <input type="file" class="form-control form-control-lg @error('image') is-invalid @enderror" 
+                                   id="image" name="image" accept="image/jpeg,image/png,image/jpg,image/gif,image/svg+xml">
+                            @error('image')
+                                <span class="invalid-feedback">{{ $message }}</span>
+                            @enderror
+                            <small class="text-muted d-block mt-2">
+                                <i class="bi bi-info-circle"></i> Format: JPG, PNG, GIF, SVG. Taille max: 2MB. Laisser vide pour conserver l'image actuelle.
+                            </small>
+                            <div class="mt-2">
+                                <img id="preview" src="" alt="Aperçu" class="rounded" style="display: none; max-width: 150px; max-height: 150px;">
+                            </div>
                         </div>
 
                         <!-- Statut -->
@@ -184,6 +210,23 @@
     function deleteMarque() {
         document.getElementById('deleteForm').submit();
     }
+
+    // Aperçu de l'image
+    document.getElementById('image').addEventListener('change', function(e) {
+        const preview = document.getElementById('preview');
+        const file = e.target.files[0];
+        
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+            }
+            reader.readAsDataURL(file);
+        } else {
+            preview.style.display = 'none';
+        }
+    });
 </script>
 
 <style>
