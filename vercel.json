@@ -9,7 +9,7 @@
   },
   "functions": {
     "api/index.php": {
-      "runtime": "php-8.3"
+      "runtime": "now-php@1.0.0"
     }
   },
   "routes": [
