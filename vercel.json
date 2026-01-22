@@ -1,6 +1,6 @@
 {
   "buildCommand": "npm install && npm run build",
-  "installCommand": "composer install --no-dev --optimize-autoloader",
+  "installCommand": "curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && composer install --no-dev --optimize-autoloader",
   "outputDirectory": "public",
   "env": {
     "APP_ENV": "production",
