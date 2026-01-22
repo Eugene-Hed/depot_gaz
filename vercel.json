@@ -1,7 +1,6 @@
 {
   "buildCommand": "npm run build && composer install --no-dev --optimize-autoloader",
   "outputDirectory": "public",
-  "nodeVersion": "20.x",
   "functions": {
     "api/[...slug].js": {
       "runtime": "php8.3",
