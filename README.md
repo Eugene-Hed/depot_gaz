@@ -175,7 +175,7 @@ MAIL_MAILER=smtp
 1. Accéder à `http://localhost:8000/login`
 2. Identifiants de test:
    - **Username**: `admin`
-   - **Password**: `password`
+   - **Password**: `admin`
 
 ### Dashboard
 - Vue d'ensemble de l'activité
