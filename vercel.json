@@ -1,6 +1,11 @@
 {
   "buildCommand": "npm install && npm run build",
-  "installCommand": "php -r \"copy('https://getcomposer.org/installer', 'composer-setup.php');\" && php composer-setup.php --install-dir=. --filename=composer && ./composer install --no-dev --optimize-autoloader",
+  "builds": [
+    {
+      "src": "api/index.php",
+      "use": "@vercel/php"
+    }
+  ],
   "outputDirectory": "public",
   "env": {
     "APP_ENV": "production",
