@@ -1,0 +1,24 @@
+{
+  "buildCommand": "npm run build && composer install --no-dev --optimize-autoloader",
+  "outputDirectory": "public",
+  "nodeVersion": "20.x",
+  "functions": {
+    "api/[...slug].js": {
+      "runtime": "php8.3",
+      "memory": 3008,
+      "maxDuration": 60
+    }
+  },
+  "env": {
+    "APP_ENV": "production",
+    "APP_DEBUG": "false",
+    "LOG_CHANNEL": "stack",
+    "LOG_LEVEL": "error"
+  },
+  "redirects": [
+    {
+      "source": "/index.php/(.*)",
+      "destination": "/$1"
+    }
+  ]
+}
