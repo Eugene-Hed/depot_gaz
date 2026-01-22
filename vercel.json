@@ -3,7 +3,7 @@
   "outputDirectory": "public",
   "functions": {
     "api/[...slug].js": {
-      "runtime": "php@8.3",
+      "runtime": "now-php@1.0.0",
       "memory": 1024,
       "maxDuration": 30
     }
