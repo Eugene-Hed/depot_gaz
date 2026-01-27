@@ -1,0 +1,241 @@
+╔════════════════════════════════════════════════════════════════╗
+║           MANIFEST - Dépôt GAZ Deployment Package v1.0         ║
+║                    27 janvier 2026                             ║
+╚════════════════════════════════════════════════════════════════╝
+
+📦 FICHIERS DE DOCUMENTATION CRÉÉS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+FICHIERS À LIRE D'ABORD:
+  ✅ START_HERE.md (3.3 KB)         ⭐ COMMENCEZ ICI!
+  ✅ INDEX.md (7.6 KB)              Navigation documentation
+
+GUIDES INSTALLATION:
+  ✅ QUICK_START.md (7.1 KB)        Installation rapide 15 min
+  ✅ WINDOWS_SETUP.md (3.3 KB)      Windows détaillé pas à pas
+  ✅ DEPLOYMENT_GUIDE.md (9.4 KB)   Complet pour admin
+
+GUIDES SPÉCIALISÉS:
+  ✅ USER_GUIDE.md (7.1 KB)         Pour opérateurs/vendeurs
+  ✅ DEPOT_LOCAL.md (9.3 KB)        Pour responsables/direction
+
+VUE D'ENSEMBLE:
+  ✅ DEPLOYMENT_PACKAGE.md (9.4 KB) Package complet
+  ✅ RESOURCES.md (5.5 KB)          Liste des ressources
+  ✅ README.md (6.5 KB)             Vue globale du projet
+
+AUTRES:
+  ✅ DOCUMENTATION.md (5.5 KB)      Statut projet
+  ✅ PROJECT_STATUS.md              Stato précédent
+
+TOTAL DOCUMENTATION: ~90 KB
+
+🛠️ SCRIPTS DE LANCEMENT CRÉÉS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+LANCEURS:
+  ✅ START.bat (2.8 KB)             Double-clic Windows
+  ✅ START.ps1 (4.6 KB)             PowerShell script
+
+UTILITAIRES:
+  ✅ health-check.sh (4.0 KB)       Vérification santé système
+
+TOTAL SCRIPTS: ~11.4 KB
+
+💾 CODE SOURCE AJOUTÉ
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+SYSTÈME DE PÉRIODE DE TEST:
+  ✅ app/Helpers/TrialManager.php
+     - Gestion des dates de test
+     - Calcul jours restants
+     - Statut expiration
+
+  ✅ app/Http/Middleware/CheckTrialExpiration.php
+     - Vérification expiration à chaque accès
+     - Affichage page d'expiration
+     - Blocage après 30 jours
+
+  ✅ resources/views/trial/expired.blade.php
+     - Vue d'expiration
+     - Design Bootstrap 5
+     - Informations contact
+
+MODIFICATIONS:
+  ✅ bootstrap/app.php
+     - Enregistrement du middleware
+     - Vérification automatique
+
+  ✅ resources/views/dashboard.blade.php
+     - Affichage compteur jours
+     - Alerte information/danger
+     - Intégration période test
+
+TOTAL CODE AJOUTÉ: ~400 lignes
+
+📁 STRUCTURE CRÉÉE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Nouveau:
+  - storage/app/trial_start.txt (auto-créé à première utilisation)
+  - storage/app/public/bouteilles/ (uploads images types)
+  - storage/app/public/marques/ (uploads logos marques)
+
+Modifié:
+  - bootstrap/app.php
+  - resources/views/dashboard.blade.php
+
+⏰ PÉRIODE DE TEST
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Durée:              30 jours
+Démarrage:          Automatique à première utilisation
+Affichage compteur: À partir du jour 17
+Alerte information: Jours 17-23
+Alerte danger:      Jours 24-30
+Blocage:            Jour 31+
+Réinitialisation:   Suppression storage/app/trial_start.txt
+
+✅ FONCTIONNALITÉS IMPLÉMENTÉES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ Système de période de test 30 jours (NOUVEAU)
+✅ Upload images types de bouteilles (AVANT)
+✅ Upload logos marques (AVANT)
+✅ Gestion stock avec mouvements (AVANT)
+✅ Gestion transactions (4 types) (AVANT)
+✅ Gestion clients (AVANT)
+✅ Dashboard avec KPI et graphiques (AVANT)
+✅ Rapports et exports (PDF/CSV/XLSX) (AVANT)
+✅ Authentification utilisateur (AVANT)
+✅ Alertes stocks (AVANT)
+
+🚀 PRÉREQUIS INSTALLATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+SYSTÈME:
+  - Windows 10/11
+  - 4 GB RAM minimum (8 GB recommandé)
+  - 10 GB disque libre
+
+LOGICIELS:
+  - PHP 8.4+
+  - MariaDB 11.8+
+  - Composer
+  - Git (optionnel)
+
+INTERNET:
+  - Nécessaire pour téléchargement initial
+  - Non nécessaire après installation
+
+🎯 ÉTAPES DE DÉPLOIEMENT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ÉTAPE 1 - Préparation (30 min, une seule fois)
+  ✅ Installer PHP 8.4+
+  ✅ Installer MariaDB 11.8+
+  ✅ Installer Composer
+  ✅ Vérifier installations
+
+ÉTAPE 2 - Configuration (30 min, une seule fois)
+  ✅ Extraire depot_gaz.zip
+  ✅ Copier .env.example → .env
+  ✅ Éditer .env avec paramètres DB
+  ✅ Exécuter composer install
+  ✅ Exécuter migrations
+  ✅ Créer lien stockage
+
+ÉTAPE 3 - Lancement (5 sec, chaque jour)
+  ✅ Double-cliquer START.bat
+  ✅ Ou lancer START.ps1
+  ✅ Accéder http://localhost:8000
+
+📚 GUIDE DE LECTURE RAPIDE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Pour Responsable Dépôt:
+  1. START_HERE.md (5 min)
+  2. QUICK_START.md (15 min)
+  3. DEPOT_LOCAL.md (15 min)
+
+Pour Admin Système:
+  1. START_HERE.md (5 min)
+  2. QUICK_START.md (15 min)
+  3. DEPLOYMENT_GUIDE.md (60 min)
+
+Pour Opérateurs:
+  1. USER_GUIDE.md (20 min)
+
+Pour Direction:
+  1. DEPOT_LOCAL.md (15 min)
+
+📋 CHECKLIST PRÉ-DÉPLOIEMENT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+INSTALLATION:
+  [ ] PHP 8.4+ installé et testé
+  [ ] MariaDB 11.8+ installé et testé
+  [ ] Composer installé
+  [ ] Projet extrait
+  [ ] Dépendances installées
+
+CONFIGURATION:
+  [ ] .env créé et édité
+  [ ] Clé app générée
+  [ ] Base de données créée
+  [ ] Migrations exécutées
+  [ ] Lien stockage créé
+
+TEST:
+  [ ] Serveur démarre sans erreur
+  [ ] http://localhost:8000 accessible
+  [ ] Connexion admin/password OK
+  [ ] Dashboard affiche KPI
+  [ ] Création client OK
+  [ ] Transaction OK
+  [ ] Export rapport OK
+
+DOCUMENTATION:
+  [ ] Fichiers .md présents
+  [ ] Scripts .bat .ps1 présents
+  [ ] health-check.sh fonctionnel
+  [ ] USER_GUIDE.md imprimé
+  [ ] DEPOT_LOCAL.md imprimé
+  [ ] Sauvegarde configurée
+
+🎯 RÉSUMÉ PACKAGE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Documentation:      9 fichiers md (90 KB)
+Scripts:            3 fichiers (11 KB)
+Code ajouté:        4 fichiers (400 lignes)
+Modifications:      2 fichiers modifiés
+Temps installation: 45 minutes (une seule fois)
+Temps lancement:    5 secondes
+Période test:       30 jours
+Support:            GitHub + Documentation
+
+📞 SUPPORT & CONTACT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+GitHub:     https://github.com/Eugene-Hed/depot_gaz
+Auteur:     Eugene-Hed
+Support:    Via GitHub Issues
+
+🎉 PRÊT À DÉPLOYER
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ Tous les fichiers créés et testés
+✅ Documentation complète fournie
+✅ Scripts de lancement inclus
+✅ Système de test configur
+✅ Support documentation inclus
+
+COMMENCEZ PAR: START_HERE.md
+
+═══════════════════════════════════════════════════════════════════
+
+Version: 1.0
+Date: 27 janvier 2026
+Créé pour: Déploiement Windows local
+Status: Prêt pour production

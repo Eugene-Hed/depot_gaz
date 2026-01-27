@@ -2,6 +2,37 @@
 
 @section('content')
 <div class="container-fluid py-4">
+    <!-- Alerte Période de Test -->
+    @php
+        $trial = \App\Helpers\TrialManager::getTrialStatus();
+    @endphp
+
+    @if($trial['active'])
+        @if($trial['remaining_days'] <= 7)
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="bi bi-exclamation-circle-fill"></i> <strong>Attention!</strong> 
+                        Votre période de test expire dans <strong>{{ $trial['remaining_days'] }} jour(s)</strong> 
+                        (le {{ $trial['end_date']->format('d/m/Y') }})
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                </div>
+            </div>
+        @elseif($trial['remaining_days'] <= 14)
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                        <i class="bi bi-info-circle"></i> <strong>Information:</strong> 
+                        Votre période de test expire dans <strong>{{ $trial['remaining_days'] }} jour(s)</strong> 
+                        (le {{ $trial['end_date']->format('d/m/Y') }})
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                </div>
+            </div>
+        @endif
+    @endif
+
     <!-- Header -->
     <div class="row mb-4">
         <div class="col-12">
