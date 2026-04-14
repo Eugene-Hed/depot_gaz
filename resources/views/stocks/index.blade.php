@@ -3,228 +3,108 @@
 @section('title', 'Gestion des Stocks')
 
 @section('content')
-    <!-- Header -->
-    <div class="row mb-4">
-        <div class="col-md-8">
-            <h1><i class="bi bi-boxes"></i> Gestion des Stocks</h1>
-        </div>
-        <div class="col-md-4 text-end">
-            <a href="{{ route('stocks.create') }}" class="btn btn-primary">
-                <i class="bi bi-plus-circle"></i> Nouveau mouvement
+<div class="row mb-5 align-items-end">
+    <div class="col-md-8">
+        <h1 class="h3 fw-bold text-navy mb-1 text-uppercase ls-wide">Inventaire Global</h1>
+        <p class="text-secondary small mb-0">Suivi en temps réel des quantités de bouteilles disponibles</p>
+    </div>
+    <div class="col-md-4 text-md-end mt-3 mt-md-0">
+        <div class="d-flex gap-2 justify-content-md-end">
+            <a href="{{ route('stocks.mouvements') }}" class="btn btn-outline-navy btn-sm rounded-pill px-3">
+                <i class="bi bi-journal-text me-1"></i> Audit Stock
+            </a>
+            <a href="{{ route('types-bouteilles.create') }}" class="btn btn-navy btn-sm rounded-pill px-4">
+                <i class="bi bi-plus-lg me-1"></i> Nouveau Produit
             </a>
         </div>
     </div>
+</div>
 
-    <!-- Statistiques KPI -->
-    <div class="row mb-4">
-        @php
-            $totalStocks = $stocks->sum(function($s) { return $s->quantite_pleine + $s->quantite_vide; });
-            $totalPleines = $stocks->sum('quantite_pleine');
-            $totalVides = $stocks->sum('quantite_vide');
-            $stocksEnRupture = $stocks->filter(function($s) { 
-                return $s->quantite_pleine < $s->typeBouteille->seuil_alerte; 
-            })->count();
-        @endphp
-        
-        <div class="col-md-3 mb-3">
-            <div class="card border-0 shadow-sm">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <p class="text-muted mb-0 small">Total bouteilles</p>
-                            <h4 class="mb-0">{{ $totalStocks }}</h4>
-                        </div>
-                        <div class="text-primary" style="font-size: 2rem;">
-                            <i class="bi bi-boxes"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+<!-- Alertes de rupture (si présentes) -->
+@php
+    $ruptures = $stocks->filter(function($s) { return $s->quantite_pleine < $s->typeBouteille->seuil_alerte; });
+@endphp
 
-        <div class="col-md-3 mb-3">
-            <div class="card border-0 shadow-sm">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <p class="text-muted mb-0 small">Bouteilles pleines</p>
-                            <h4 class="mb-0 text-success">{{ $totalPleines }}</h4>
-                        </div>
-                        <div class="text-success" style="font-size: 2rem;">
-                            <i class="bi bi-check-circle-fill"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3 mb-3">
-            <div class="card border-0 shadow-sm">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <p class="text-muted mb-0 small">Bouteilles vides</p>
-                            <h4 class="mb-0 text-warning">{{ $totalVides }}</h4>
-                        </div>
-                        <div class="text-warning" style="font-size: 2rem;">
-                            <i class="bi bi-exclamation-circle-fill"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3 mb-3">
-            <div class="card border-0 shadow-sm">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <p class="text-muted mb-0 small">Ruptures</p>
-                            <h4 class="mb-0 text-danger">{{ $stocksEnRupture }}</h4>
-                        </div>
-                        <div class="text-danger" style="font-size: 2rem;">
-                            <i class="bi bi-exclamation-octagon-fill"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
+@if($ruptures->count() > 0)
+    <div class="alert alert-warning border-0 shadow-sm mb-4 d-flex align-items-center">
+        <i class="bi bi-exclamation-triangle-fill fs-4 me-3"></i>
+        <div>
+            <span class="fw-bold">Alerte Stock Bas :</span> 
+            {{ $ruptures->count() }} type(s) de bouteilles sont sous le seuil d'alerte.
         </div>
     </div>
+@endif
 
-    <!-- Alertes ruptures -->
-    @if($stocksEnRupture > 0)
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <i class="bi bi-exclamation-triangle"></i>
-            <strong>Attention!</strong> {{ $stocksEnRupture }} produit(s) en rupture de stock. Vérifiez ci-dessous.
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    @endif
-
-    <!-- Tableau des stocks -->
-    <div class="card shadow-sm">
-        <div class="card-header bg-light">
-            <div class="row align-items-center">
-                <div class="col">
-                    <h5 class="mb-0">Inventaire complet</h5>
-                </div>
-                <div class="col-auto">
-                    <small class="text-muted">{{ $stocks->total() }} article(s)</small>
-                </div>
-            </div>
-        </div>
+<!-- Tableau des Stocks -->
+<div class="card card-corporate border-0 shadow-sm">
+    <div class="card-body p-0">
         <div class="table-responsive">
-            <table class="table table-hover mb-0">
-                <thead class="table-light">
+            <table class="table table-modern align-middle mb-0">
+                <thead>
                     <tr>
-                        <th>Produit</th>
-                        <th>Marque</th>
-                        <th class="text-center">Pleines</th>
-                        <th class="text-center">Vides</th>
-                        <th class="text-center">Total</th>
-                        <th class="text-center">Seuil</th>
-                        <th class="text-center">% Dispo</th>
-                        <th class="text-center">Statut</th>
-                        <th class="text-center">Actions</th>
+                        <th class="ps-4">MARQUE & TYPE</th>
+                        <th class="text-center">CAPACITÉ</th>
+                        <th class="text-center">STOCK PLEIN</th>
+                        <th class="text-center">STOCK VIDE</th>
+                        <th class="text-center">TOTAL</th>
+                        <th class="pe-4 text-end">ACTIONS</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse($stocks as $stock)
+                    @foreach($stocks as $stock)
                         @php
+                            $isLow = $stock->quantite_pleine < $stock->typeBouteille->seuil_alerte;
                             $total = $stock->quantite_pleine + $stock->quantite_vide;
-                            $pourcentage = $stock->quantite_pleine / max($stock->typeBouteille->seuil_alerte, 1) * 100;
-                            $estEnRupture = $stock->quantite_pleine < $stock->typeBouteille->seuil_alerte;
                         @endphp
-                        <tr class="{{ $estEnRupture ? 'table-danger' : '' }}">
-                            <td>
-                                <strong>{{ $stock->typeBouteille->nom }}</strong>
-                            </td>
-                            <td>
-                                <span class="badge bg-info">{{ $stock->typeBouteille->marque->nom }}</span>
-                            </td>
-                            <td class="text-center">
-                                <span class="badge bg-success">{{ $stock->quantite_pleine }}</span>
-                            </td>
-                            <td class="text-center">
-                                <span class="badge bg-warning">{{ $stock->quantite_vide }}</span>
-                            </td>
-                            <td class="text-center">
-                                <strong>{{ $total }}</strong>
-                            </td>
-                            <td class="text-center">
-                                <small class="text-muted">{{ $stock->typeBouteille->seuil_alerte }}</small>
-                            </td>
-                            <td class="text-center">
-                                <div class="progress" style="height: 20px;">
-                                    <div class="progress-bar {{ $estEnRupture ? 'bg-danger' : 'bg-success' }}" 
-                                         role="progressbar" 
-                                         style="width: {{ min($pourcentage, 100) }}%"
-                                         aria-valuenow="{{ min($pourcentage, 100) }}" 
-                                         aria-valuemin="0" 
-                                         aria-valuemax="100">
-                                        <small>{{ round(min($pourcentage, 100)) }}%</small>
+                        <tr>
+                            <td class="ps-4 py-3">
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar-circle-sm bg-light text-navy me-3 fw-bold d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; border-radius: 10px;">
+                                        {{ substr($stock->typeBouteille->marque->nom, 0, 1) }}
+                                    </div>
+                                    <div>
+                                        <p class="mb-0 fw-bold text-navy small">{{ $stock->typeBouteille->marque->nom }}</p>
+                                        <span class="text-secondary small">{{ $stock->typeBouteille->nom }}</span>
                                     </div>
                                 </div>
                             </td>
-                            <td class="text-center">
-                                @if($estEnRupture)
-                                    <span class="badge bg-danger">
-                                        <i class="bi bi-exclamation-octagon"></i> Rupture
-                                    </span>
-                                @elseif($pourcentage < 75)
-                                    <span class="badge bg-warning">
-                                        <i class="bi bi-exclamation-triangle"></i> Faible
-                                    </span>
-                                @else
-                                    <span class="badge bg-success">
-                                        <i class="bi bi-check-circle"></i> OK
-                                    </span>
-                                @endif
+                            <td class="text-center small text-secondary">
+                                {{ $stock->typeBouteille->taille }}
                             </td>
                             <td class="text-center">
-                                <div class="btn-group btn-group-sm" role="group">
-                                    <a href="{{ route('stocks.edit', $stock) }}" 
-                                       class="btn btn-outline-primary" 
-                                       title="Ajuster">
-                                        <i class="bi bi-pencil"></i>
+                                <span class="fw-bold {{ $isLow ? 'text-danger animate__animated animate__pulse animate__infinite' : 'text-navy' }}">
+                                    {{ $stock->quantite_pleine }}
+                                </span>
+                                @if($isLow)
+                                    <span class="d-block font-2xs text-danger fw-bold">Rupture attendue</span>
+                                @endif
+                            </td>
+                            <td class="text-center text-secondary">
+                                {{ $stock->quantite_vide }}
+                            </td>
+                            <td class="text-center">
+                                <span class="badge badge-subtle px-3 py-2 rounded-pill">{{ $total }}</span>
+                            </td>
+                            <td class="pe-4 text-end">
+                                <div class="btn-group">
+                                    <a href="{{ route('stocks.show', $stock) }}" class="btn btn-sm btn-light border" title="Détails">
+                                        <i class="bi bi-eye"></i>
                                     </a>
-                                    <a href="{{ route('stocks.show', $stock) }}" 
-                                       class="btn btn-outline-info" 
-                                       title="Historique">
-                                        <i class="bi bi-clock-history"></i>
+                                    <a href="{{ route('stocks.edit', $stock) }}" class="btn btn-sm btn-light border" title="Ajuster">
+                                        <i class="bi bi-pencil-square"></i>
                                     </a>
                                 </div>
                             </td>
                         </tr>
-                    @empty
-                        <tr>
-                            <td colspan="9" class="text-center text-muted py-4">
-                                <i class="bi bi-inbox"></i> Aucun stock
-                            </td>
-                        </tr>
-                    @endforelse
+                    @endforeach
                 </tbody>
             </table>
         </div>
     </div>
+</div>
 
-    <!-- Pagination -->
-    <div class="d-flex justify-content-center mt-4">
-        {{ $stocks->links() }}
-    </div>
-
-    <style>
-        .card {
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
-        }
-        .progress {
-            background-color: #f5f5f5;
-        }
-        .table-danger {
-            background-color: #ffe6e6;
-        }
-    </style>
+<style>
+    /* Styles spécifiques pour intensifier l'alerte sur cette page */
+    .animate__pulse { --animate-duration: 2s; }
+</style>
 @endsection

@@ -1,146 +1,104 @@
 @extends('layouts.app')
 
+@section('title', 'Nouvelle Marque')
+
 @section('content')
-<div class="container-fluid">
-    <!-- Header -->
-    <div class="row mb-4">
-        <div class="col-md-8">
-            <h1><i class="bi bi-plus-circle"></i> Nouvelle marque</h1>
-        </div>
-        <div class="col-md-4 text-end">
-            <a href="{{ route('marques.index') }}" class="btn btn-secondary">
-                <i class="bi bi-arrow-left"></i> Retour
-            </a>
-        </div>
+<div class="row mb-5 align-items-end">
+    <div class="col-md-8">
+        <h1 class="h3 fw-bold text-navy mb-1 text-uppercase ls-wide">Enregistrer une Marque</h1>
+        <p class="text-secondary small mb-0">Définition d'un nouvel industriel partenaire</p>
     </div>
+    <div class="col-md-4 text-md-end mt-3 mt-md-0">
+        <a href="{{ route('marques.index') }}" class="btn btn-light btn-sm border rounded-pill px-3 fw-bold">
+            <i class="bi bi-arrow-left me-1"></i> Retour à la liste
+        </a>
+    </div>
+</div>
 
-    <div class="row">
-        <!-- Form Column (Left - 8 cols) -->
-        <div class="col-lg-8">
-            <div class="card border-0 shadow-sm">
-                <div class="card-header bg-light border-0">
-                    <h5 class="card-title mb-0"><i class="bi bi-form-check"></i> Informations de la marque</h5>
-                </div>
-                <div class="card-body p-4">
-                    @if ($errors->any())
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            <i class="bi bi-exclamation-circle-fill"></i> <strong>Erreur!</strong> Veuillez corriger les erreurs ci-dessous.
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                        </div>
-                    @endif
+<div class="row g-4">
+    <div class="col-lg-8">
+        <div class="card card-corporate border-0 shadow-sm">
+            <div class="card-header bg-navy text-white p-4">
+                <h6 class="mb-0 fw-bold text-uppercase ls-wide small"><i class="bi bi-patch-check me-2"></i> Identité Marque</h6>
+            </div>
+            <div class="card-body p-4">
+                <form action="{{ route('marques.store') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
 
-                    <form action="{{ route('marques.store') }}" method="POST" enctype="multipart/form-data">
-                        @csrf
-
+                    <div class="row g-4">
                         <!-- Nom -->
-                        <div class="mb-4">
-                            <label for="nom" class="form-label fw-bold">
-                                <i class="bi bi-tag"></i> Nom de la marque *
-                            </label>
-                            <input type="text" class="form-control form-control-lg @error('nom') is-invalid @enderror" 
-                                   id="nom" name="nom" placeholder="Ex: TotalEnergies, Butagaz, Primagaz..." 
+                        <div class="col-md-12">
+                            <label for="nom" class="small text-muted fw-bold text-uppercase mb-2 d-block">Nom Commercial *</label>
+                            <input type="text" class="form-control form-control-lg fw-bold text-navy @error('nom') is-invalid @enderror" 
+                                   id="nom" name="nom" placeholder="Ex: TotalEnergies, Butagaz..." 
                                    value="{{ old('nom') }}" required autofocus>
                             @error('nom')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
                             @enderror
-                            <small class="text-muted d-block mt-2">Nom unique de la marque</small>
                         </div>
 
                         <!-- Image/Logo -->
-                        <div class="mb-4">
-                            <label for="image" class="form-label fw-bold">
-                                <i class="bi bi-image"></i> Logo de la marque
-                            </label>
-                            <input type="file" class="form-control form-control-lg @error('image') is-invalid @enderror" 
-                                   id="image" name="image" accept="image/jpeg,image/png,image/jpg,image/gif,image/svg+xml">
-                            @error('image')
-                                <span class="invalid-feedback">{{ $message }}</span>
-                            @enderror
-                            <small class="text-muted d-block mt-2">
-                                <i class="bi bi-info-circle"></i> Format: JPG, PNG, GIF, SVG. Taille max: 2MB
-                            </small>
-                            <div class="mt-2">
-                                <img id="preview" src="" alt="Aperçu" class="rounded" style="display: none; max-width: 150px; max-height: 150px;">
+                        <div class="col-md-12">
+                            <label for="image" class="small text-muted fw-bold text-uppercase mb-2 d-block">Vignette / Logo</label>
+                            <div class="p-4 border border-dashed rounded-4 text-center bg-light">
+                                <input type="file" class="form-control d-none @error('image') is-invalid @enderror" 
+                                       id="image" name="image" accept="image/*">
+                                <label for="image" class="cursor-pointer mb-0">
+                                    <div class="mb-2">
+                                        <i class="bi bi-cloud-arrow-up fs-2 text-navy opacity-50"></i>
+                                    </div>
+                                    <span class="d-block fw-bold text-navy small">Cliquer pour télécharger le logo</span>
+                                    <span class="text-muted font-2xs">SVG, PNG ou JPG (Max: 2MB)</span>
+                                </label>
+                                <div class="mt-3">
+                                    <img id="preview" src="" alt="Aperçu" class="rounded shadow-sm" style="display: none; max-width: 120px; max-height: 120px; margin: 0 auto;">
+                                </div>
                             </div>
+                            @error('image')
+                                <span class="invalid-feedback d-block">{{ $message }}</span>
+                            @enderror
                         </div>
 
                         <!-- Statut -->
-                        <div class="mb-4">
-                            <label class="form-label fw-bold mb-3">
-                                <i class="bi bi-toggle-on"></i> Statut *
-                            </label>
-                            <div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="statut" id="statut_actif" 
-                                           value="actif" {{ old('statut', 'actif') === 'actif' ? 'checked' : '' }} required>
-                                    <label class="form-check-label" for="statut_actif">
-                                        <span class="badge bg-success">Actif</span>
-                                    </label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="statut" id="statut_inactif" 
-                                           value="inactif" {{ old('statut') === 'inactif' ? 'checked' : '' }} required>
-                                    <label class="form-check-label" for="statut_inactif">
-                                        <span class="badge bg-secondary">Inactif</span>
-                                    </label>
-                                </div>
-                            </div>
-                            @error('statut')
-                                <div class="invalid-feedback d-block">{{ $message }}</div>
-                            @enderror
-                        </div>
+                        <div class="col-md-12">
+                            <label class="small text-muted fw-bold text-uppercase mb-2 d-block">Disponibilité</label>
+                            <div class="btn-group w-100" role="group">
+                                <input type="radio" class="btn-check" name="statut" id="statut_actif" 
+                                       value="actif" {{ old('statut', 'actif') === 'actif' ? 'checked' : '' }} required>
+                                <label class="btn btn-outline-navy py-2" for="statut_actif">Marque Active</label>
 
-                        @error('error')
-                            <div class="alert alert-danger mb-4" role="alert">
-                                <i class="bi bi-exclamation-circle"></i> {{ $message }}
+                                <input type="radio" class="btn-check" name="statut" id="statut_inactif" 
+                                       value="inactif" {{ old('statut') === 'inactif' ? 'checked' : '' }} required>
+                                <label class="btn btn-outline-navy py-2" for="statut_inactif">Inactive</label>
                             </div>
-                        @enderror
-
-                        <!-- Boutons -->
-                        <div class="d-flex gap-2 pt-3">
-                            <button type="submit" class="btn btn-primary btn-lg">
-                                <i class="bi bi-check-lg"></i> Créer la marque
-                            </button>
-                            <a href="{{ route('marques.index') }}" class="btn btn-outline-secondary btn-lg">
-                                <i class="bi bi-x-lg"></i> Annuler
-                            </a>
                         </div>
-                    </form>
-                </div>
+                    </div>
+
+                    <div class="d-flex gap-3 border-top pt-4 mt-5">
+                        <button type="submit" class="btn btn-navy rounded-pill px-5 fw-bold">
+                            Enregistrer la Marque
+                        </button>
+                        <a href="{{ route('marques.index') }}" class="btn btn-light rounded-pill px-4 border small fw-bold">
+                            Annuler
+                        </a>
+                    </div>
+                </form>
             </div>
         </div>
+    </div>
 
-        <!-- Info Sidebar (Right - 4 cols) -->
-        <div class="col-lg-4">
-            <div class="card border-0 shadow-sm bg-light">
-                <div class="card-header bg-info text-white border-0">
-                    <h5 class="card-title mb-0"><i class="bi bi-info-circle"></i> Guide</h5>
-                </div>
-                <div class="card-body">
-                    <div class="mb-4">
-                        <p class="mb-2"><strong>Nom de la marque</strong></p>
-                        <p class="small text-muted">
-                            Nom unique et identifiant de la marque (ex: TotalEnergies, Butagaz)
-                        </p>
-                        <div class="alert alert-light small mt-2">
-                            Ce nom ne peut pas être modifié après création
-                        </div>
-                    </div>
-
-                    <hr>
-
-                    <div class="mb-4">
-                        <p class="mb-2"><strong>Statut</strong></p>
-                        <p class="small text-muted">
-                            Indique si la marque est disponible pour les opérations
-                        </p>
-                    </div>
-
-                    <hr>
-
-                    <div class="alert alert-info small">
-                        <i class="bi bi-lightbulb"></i>
-                        <strong>Conseil:</strong> Ajoutez un logo pour identifier rapidement la marque.
+    <div class="col-lg-4">
+        <div class="card card-corporate border-0 shadow-sm bg-light h-100">
+            <div class="card-body p-4">
+                <h6 class="fw-bold text-navy text-uppercase ls-wide small mb-4">Aide contextuelle</h6>
+                <div class="small text-secondary">
+                    <p class="mb-3"><strong>Unique :</strong> Le nom de la marque sert de référence unique. On ne peut pas avoir deux marques avec le même nom.</p>
+                    <p class="mb-4"><strong>Audit :</strong> Une marque inactive ne pourra plus être sélectionnée lors de la création de nouveaux types de bouteilles, mais ses données historiques seront conservées.</p>
+                    
+                    <div class="bg-white p-3 rounded-4 border border-navy border-opacity-10">
+                        <i class="bi bi-lightbulb text-warning me-2"></i>
+                        <span class="font-2xs fw-bold text-navy">INFO :</span>
+                        <p class="font-2xs mb-0 mt-1">L'image sera automatiquement redimensionnée pour s'adapter à l'affichage des vignettes du catalogue.</p>
                     </div>
                 </div>
             </div>
@@ -148,23 +106,10 @@
     </div>
 </div>
 
-<style>
-    .card {
-        transition: transform 0.2s, box-shadow 0.2s;
-    }
-    
-    .card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
-    }
-</style>
-
 <script>
-    // Aperçu de l'image
     document.getElementById('image').addEventListener('change', function(e) {
         const preview = document.getElementById('preview');
         const file = e.target.files[0];
-        
         if (file) {
             const reader = new FileReader();
             reader.onload = function(e) {
@@ -177,4 +122,9 @@
         }
     });
 </script>
+
+<style>
+    .cursor-pointer { cursor: pointer; }
+    .border-dashed { border-style: dashed !important; border-width: 2px !important; }
+</style>
 @endsection

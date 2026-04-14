@@ -41,7 +41,7 @@ class DashboardController extends Controller
         ];
 
         // Transactions récentes
-        $recentTransactions = Transaction::with('typeBouteille')
+        $recentTransactions = Transaction::with(['typeBouteille', 'client'])
             ->latest()
             ->limit(10)
             ->get();

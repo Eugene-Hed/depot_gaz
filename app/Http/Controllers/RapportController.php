@@ -24,6 +24,12 @@ class RapportController extends Controller
      */
     public function index()
     {
+        // Statistiques de synthèse pour l'affichage visuel
+        $statsRevenus = Transaction::select('type', \DB::raw('SUM(montant_net) as total'))
+            ->groupBy('type')
+            ->get()
+            ->pluck('total', 'type');
+
         $rapports = [
             [
                 'id' => 'clients',
@@ -75,7 +81,7 @@ class RapportController extends Controller
             ],
         ];
 
-        return view('rapports.index', compact('rapports'));
+        return view('rapports.index', compact('rapports', 'statsRevenus'));
     }
 
     /**

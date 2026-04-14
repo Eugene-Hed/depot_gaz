@@ -1,152 +1,114 @@
 @extends('layouts.app')
 
-@section('title', 'Nouveau Paiement')
+@section('title', 'Encaisser un Règlement')
 
 @section('content')
-<div class="row mb-4">
-    <div class="col-12">
-        <h1><i class="bi bi-plus-circle"></i> Enregistrer un Paiement</h1>
+<div class="row mb-5 align-items-end">
+    <div class="col-md-8">
+        <h1 class="h3 fw-bold text-navy mb-1 text-uppercase ls-wide">Enregistrer un Paiement</h1>
+        <p class="text-secondary small mb-0">Imputation d'un règlement sur une transaction existante</p>
+    </div>
+    <div class="col-md-4 text-md-end mt-3 mt-md-0">
+        <a href="{{ route('paiements.index') }}" class="btn btn-light btn-sm border rounded-pill px-3 fw-bold">
+            <i class="bi bi-arrow-left me-1"></i> Retour à la trésorerie
+        </a>
     </div>
 </div>
 
-@if($errors->any())
-    <div class="alert alert-danger alert-dismissible fade show">
-        <h4 class="alert-heading">Erreurs de validation</h4>
-        <ul class="mb-0">
-            @foreach($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+<div class="row g-4">
+    <div class="col-lg-8">
+        <div class="card card-corporate border-0 shadow-sm">
+            <div class="card-header bg-navy text-white p-4">
+                <h6 class="mb-0 fw-bold text-uppercase ls-wide small"><i class="bi bi-cash-coin me-2"></i> Formulaire d'Encaissement</h6>
+            </div>
+            <div class="card-body p-4">
+                <form action="{{ route('paiements.store') }}" method="POST">
+                    @csrf
+
+                    <div class="row g-4">
+                        <!-- Transaction & Client -->
+                        <div class="col-md-6">
+                            <label for="transaction_id" class="small text-muted fw-bold text-uppercase mb-2 d-block">Transaction Referente *</label>
+                            <select class="form-select @error('transaction_id') is-invalid @enderror" id="transaction_id" name="transaction_id" required>
+                                <option value="">-- Choisir la transaction --</option>
+                                @foreach($transactions as $transaction)
+                                    <option value="{{ $transaction->id }}" @selected(old('transaction_id') == $transaction->id)>
+                                        #{{ $transaction->numero_transaction }} - {{ $transaction->client->nom_complet ?? 'Comptoir' }} ({{ number_format($transaction->montant_total, 0) }} F)
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="client_id" class="small text-muted fw-bold text-uppercase mb-2 d-block">Client Bénéficiaire *</label>
+                            <select class="form-select @error('client_id') is-invalid @enderror" id="client_id" name="client_id" required>
+                                <option value="">-- Choisir le client --</option>
+                                @foreach($clients as $client)
+                                    <option value="{{ $client->id }}" @selected(old('client_id') == $client->id)>
+                                        {{ $client->nom_complet }} ({{ $client->telephone }})
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <!-- Montant & Mode -->
+                        <div class="col-md-6">
+                            <label for="montant_paye" class="small text-muted fw-bold text-uppercase mb-2 d-block">Somme Reçue (F) *</label>
+                            <div class="input-group input-group-lg">
+                                <span class="input-group-text bg-light border-end-0"><i class="bi bi-currency-exchange"></i></span>
+                                <input type="number" class="form-control fw-bold text-navy border-start-0 @error('montant_paye') is-invalid @enderror" 
+                                       id="montant_paye" name="montant_paye" step="1" min="0" required value="{{ old('montant_paye') }}">
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="mode_paiement" class="small text-muted fw-bold text-uppercase mb-2 d-block">Canal de Règlement *</label>
+                            <select class="form-select form-select-lg @error('mode_paiement') is-invalid @enderror" id="mode_paiement" name="mode_paiement" required>
+                                <option value="">-- Mode --</option>
+                                <option value="especes" @selected(old('mode_paiement') == 'especes')>Espèces</option>
+                                <option value="orange_money" @selected(old('mode_paiement') == 'orange_money')>Orange Money</option>
+                                <option value="momo" @selected(old('mode_paiement') == 'momo')>MTN MoMo</option>
+                                <option value="virement" @selected(old('mode_paiement') == 'virement')>Virement</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="date_paiement" class="small text-muted fw-bold text-uppercase mb-2 d-block">Date Effective *</label>
+                            <input type="date" class="form-control @error('date_paiement') is-invalid @enderror" 
+                                   id="date_paiement" name="date_paiement" required value="{{ old('date_paiement', date('Y-m-d')) }}">
+                        </div>
+
+                        <div class="col-md-12">
+                            <label for="notes" class="small text-muted fw-bold text-uppercase mb-2 d-block">Commentaires / Références</label>
+                            <textarea class="form-control" id="notes" name="notes" rows="2" placeholder="Ex: Référence transfert, numéro de chèque...">{{ old('notes') }}</textarea>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-3 border-top pt-4 mt-5">
+                        <button type="submit" class="btn btn-navy rounded-pill px-5 fw-bold">
+                            Confirmer l'Encaissement
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-@endif
 
-<div class="card">
-    <div class="card-body">
-        <form action="{{ route('paiements.store') }}" method="POST">
-            @csrf
-
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        <label for="transaction_id" class="form-label">Transaction <span class="text-danger">*</span></label>
-                        <select class="form-select @error('transaction_id') is-invalid @enderror" 
-                                id="transaction_id" name="transaction_id" required>
-                            <option value="">-- Sélectionner une transaction --</option>
-                            @foreach($transactions as $transaction)
-                                <option value="{{ $transaction->id }}" @selected(old('transaction_id') == $transaction->id)>
-                                    #{{ $transaction->numero_transaction }} - {{ $transaction->client->nom ?? 'N/A' }} ({{ number_format($transaction->montant_net, 2) }} FCFA)
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('transaction_id')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        <label for="client_id" class="form-label">Client <span class="text-danger">*</span></label>
-                        <select class="form-select @error('client_id') is-invalid @enderror" 
-                                id="client_id" name="client_id" required>
-                            <option value="">-- Sélectionner un client --</option>
-                            @foreach($clients as $client)
-                                <option value="{{ $client->id }}" @selected(old('client_id') == $client->id)>
-                                    {{ $client->nom }} ({{ $client->telephone }})
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('client_id')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
+    <div class="col-lg-4">
+        <div class="card card-corporate border-0 shadow-sm bg-light h-100">
+            <div class="card-body p-4">
+                <h6 class="fw-bold text-navy text-uppercase ls-wide small mb-4">Informations Trésorerie</h6>
+                <div class="small text-secondary">
+                    <p class="mb-3"><strong>Validation :</strong> Un paiement enregistré est immédiatement déduit de la balance de la transaction associée.</p>
+                    
+                    <div class="bg-white p-3 rounded-4 border border-navy border-opacity-10 mb-4">
+                        <i class="bi bi-info-circle-fill text-primary me-2"></i>
+                        <span class="font-2xs fw-bold text-navy">RAPPEL :</span>
+                        <p class="font-2xs mb-0 mt-1">Assurez-vous que le montant saisi correspond exactement à la somme perçue pour éviter les écarts de caisse en fin de journée.</p>
                     </div>
                 </div>
             </div>
-
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        <label for="montant_paye" class="form-label">Montant Payé (FCFA) <span class="text-danger">*</span></label>
-                        <input type="number" class="form-control @error('montant_paye') is-invalid @enderror" 
-                               id="montant_paye" name="montant_paye" step="0.01" min="0" required value="{{ old('montant_paye') }}">
-                        @error('montant_paye')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        <label for="mode_paiement" class="form-label">Mode de Paiement <span class="text-danger">*</span></label>
-                        <select class="form-select @error('mode_paiement') is-invalid @enderror" 
-                                id="mode_paiement" name="mode_paiement" required>
-                            <option value="">-- Sélectionner un mode --</option>
-                            <option value="especes" @selected(old('mode_paiement') == 'especes')>Espèces</option>
-                            <option value="cheque" @selected(old('mode_paiement') == 'cheque')>Chèque</option>
-                            <option value="virement" @selected(old('mode_paiement') == 'virement')>Virement</option>
-                            <option value="carte" @selected(old('mode_paiement') == 'carte')>Carte Bancaire</option>
-                        </select>
-                        @error('mode_paiement')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        <label for="reference_cheque" class="form-label">Référence Chèque (si applicable)</label>
-                        <input type="text" class="form-control" id="reference_cheque" name="reference_cheque" 
-                               value="{{ old('reference_cheque') }}" placeholder="Numéro de chèque">
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        <label for="reference_virement" class="form-label">Référence Virement (si applicable)</label>
-                        <input type="text" class="form-control" id="reference_virement" name="reference_virement" 
-                               value="{{ old('reference_virement') }}" placeholder="Référence virement">
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        <label for="reference_carte" class="form-label">Référence Carte (si applicable)</label>
-                        <input type="text" class="form-control" id="reference_carte" name="reference_carte" 
-                               value="{{ old('reference_carte') }}" placeholder="Numéro de transaction">
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        <label for="date_paiement" class="form-label">Date du Paiement <span class="text-danger">*</span></label>
-                        <input type="date" class="form-control @error('date_paiement') is-invalid @enderror" 
-                               id="date_paiement" name="date_paiement" required value="{{ old('date_paiement', date('Y-m-d')) }}">
-                        @error('date_paiement')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                </div>
-            </div>
-
-            <div class="mb-3">
-                <label for="notes" class="form-label">Notes</label>
-                <textarea class="form-control" id="notes" name="notes" rows="3" placeholder="Commentaires optionnels">{{ old('notes') }}</textarea>
-            </div>
-
-            <div class="d-flex gap-2">
-                <button type="submit" class="btn btn-success">
-                    <i class="bi bi-check-circle"></i> Enregistrer le Paiement
-                </button>
-                <a href="{{ route('paiements.index') }}" class="btn btn-secondary">
-                    <i class="bi bi-x-circle"></i> Annuler
-                </a>
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 @endsection

@@ -6,174 +6,295 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title') - {{ config('app.name') }}</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- UI Foundation -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
+        :root {
+            --navy: #0f172a;
+            --navy-light: #1e293b;
+            --slate: #475569;
+            --slate-light: #f8fafc;
+            --accent-blue: #3b82f6;
+            --border-color: #e2e8f0;
+            --sidebar-width: 260px;
+        }
+
         body {
-            background-color: #f5f5f5;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--slate-light);
+            color: var(--navy);
+            overflow-x: hidden;
         }
+
+        /* Sidebar Corporate Style */
         .sidebar {
-            background-color: #2c3e50;
+            width: var(--sidebar-width);
+            background-color: var(--navy);
             min-height: 100vh;
-            padding-top: 20px;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 1000;
+            padding: 1.5rem 1rem;
+            transition: all 0.3s ease;
         }
-        .sidebar .nav-link {
-            color: #ecf0f1;
-            margin: 10px 0;
-            border-radius: 5px;
-            transition: all 0.3s;
+
+        .sidebar-brand {
+            padding: 0.5rem 1rem 2rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 1.5rem;
         }
-        .sidebar .nav-link:hover,
-        .sidebar .nav-link.active {
-            background-color: #667eea;
+
+        .sidebar-brand h5 {
             color: white;
+            font-weight: 800;
+            letter-spacing: 1px;
+            margin-bottom: 0;
         }
+
+        .sidebar .nav-link {
+            color: rgba(255,255,255,0.7);
+            font-weight: 500;
+            padding: 0.8rem 1rem;
+            border-radius: 8px;
+            margin-bottom: 0.25rem;
+            display: flex;
+            align-items: center;
+            transition: all 0.2s;
+        }
+
         .sidebar .nav-link i {
-            margin-right: 10px;
+            margin-right: 12px;
+            font-size: 1.1rem;
         }
-        .main-content {
-            padding: 30px;
+
+        .sidebar .nav-link:hover {
+            color: white;
+            background-color: rgba(255,255,255,0.1);
         }
-        .navbar-custom {
-            background-color: #fff;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+
+        .sidebar .nav-link.active {
+            color: white;
+            background-color: var(--accent-blue);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        /* Main Content Adjustments */
+        .main-wrapper {
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            padding: 0;
+            transition: all 0.3s ease;
+        }
+
+        .top-navbar {
+            background-color: white;
+            border-bottom: 1px solid var(--border-color);
+            padding: 0.75rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 900;
+        }
+
+        .content-area {
+            padding: 2rem;
+        }
+
+        /* Global Corporate Components */
+        .ls-wide { letter-spacing: 1.5px; }
+        .text-navy { color: var(--navy) !important; }
+        .font-2xs { font-size: 0.65rem; }
+
+        .btn-navy {
+            background-color: var(--navy);
+            color: white;
+            font-weight: 600;
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            transition: all 0.2s;
+        }
+        .btn-navy:hover {
+            background-color: var(--navy-light);
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        .card-corporate {
+            background: white;
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        /* Standard Table Corporate */
+        .table-modern thead th {
+            background-color: #f8fafc;
+            color: var(--slate);
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+            padding: 1rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .table-modern tbody td {
+            padding: 1rem;
+            vertical-align: middle;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* Utilities */
+        .badge-subtle {
+            background-color: #f1f5f9;
+            color: var(--slate);
+            font-weight: 600;
+            border: 1px solid var(--border-color);
         }
     </style>
 
     @yield('styles')
 </head>
 <body>
-    <div class="container-fluid">
-        <div class="row">
-            <!-- Sidebar -->
-            <nav class="col-md-2 sidebar">
-                <div class="text-center mb-4">
-                    <h5 class="text-white">{{ config('app.name') }}</h5>
-                    <small class="text-muted">Administrateur</small>
-                </div>
+    <div class="sidebar">
+        <div class="sidebar-brand">
+            <h5>DEPOT GAZ</h5>
+            <small class="text-white text-opacity-50 font-2xs text-uppercase">Système de Gestion</small>
+        </div>
 
-                <ul class="nav flex-column">
-                    <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}"
-                            href="{{ route('dashboard') }}">
-                            <i class="bi bi-speedometer2"></i> Tableau de bord
-                        </a>
-                    </li>
+        <ul class="nav flex-column mb-4">
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}" href="{{ route('dashboard') }}">
+                    <i class="bi bi-grid-1x2"></i> Tableau de bord
+                </a>
+            </li>
 
-                    <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('stocks.*') ? 'active' : '' }}"
-                            href="{{ route('stocks.index') }}">
-                            <i class="bi bi-boxes"></i> Stock
-                        </a>
-                    </li>
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('stocks.index') ? 'active' : '' }}" href="{{ route('stocks.index') }}">
+                    <i class="bi bi-boxes"></i> Inventaire
+                </a>
+            </li>
 
-                    <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('transactions.*') ? 'active' : '' }}"
-                            href="{{ route('transactions.index') }}">
-                            <i class="bi bi-cart-check"></i> Transactions
-                        </a>
-                    </li>
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('stocks.mouvements') ? 'active' : '' }}" href="{{ route('stocks.mouvements') }}">
+                    <i class="bi bi-arrow-down-up"></i> Audit Stock
+                </a>
+            </li>
 
-                    <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('clients.*') ? 'active' : '' }}"
-                            href="{{ route('clients.index') }}">
-                            <i class="bi bi-people"></i> Clients
-                        </a>
-                    </li>
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('transactions.*') ? 'active' : '' }}" href="{{ route('transactions.index') }}">
+                    <i class="bi bi-cart-check"></i> Transactions
+                </a>
+            </li>
 
-                    <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('rapports.*') ? 'active' : '' }}"
-                            href="{{ route('rapports.index') }}">
-                            <i class="bi bi-file-earmark-arrow-down"></i> Rapports
-                        </a>
-                    </li>
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('clients.*') ? 'active' : '' }}" href="{{ route('clients.index') }}">
+                    <i class="bi bi-people"></i> Base Clients
+                </a>
+            </li>
 
-                    @if(Auth::check())
-                        <hr class="bg-secondary">
-                        <li class="nav-item">
-                            <a class="nav-link" href="#settings" data-bs-toggle="collapse">
-                                <i class="bi bi-gear"></i> Administration
-                            </a>
-                            <div class="collapse" id="settings">
-                                <ul class="nav flex-column ms-3">
-                                    <li><a class="nav-link small {{ request()->routeIs('types-bouteilles.*') ? 'active' : '' }}" href="{{ route('types-bouteilles.index') }}">Types de bouteilles</a></li>
-                                    <li><a class="nav-link small {{ request()->routeIs('marques.*') ? 'active' : '' }}" href="{{ route('marques.index') }}">Marques</a></li>
-                                    <li><a class="nav-link small {{ request()->routeIs('fournisseurs.*') ? 'active' : '' }}" href="{{ route('fournisseurs.index') }}">Fournisseurs</a></li>
-                                </ul>
-                            </div>
-                        </li>
-                    @endif
-                </ul>
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('rapports.*') ? 'active' : '' }}" href="{{ route('rapports.index') }}">
+                    <i class="bi bi-file-earmark-bar-graph"></i> Analytique
+                </a>
+            </li>
+        </ul>
 
-                <hr class="bg-secondary mt-4">
+        @if(Auth::check())
+            <p class="text-white text-opacity-25 small fw-bold text-uppercase px-3 mb-2" style="font-size: 0.6rem; letter-spacing: 1px;">Configuration</p>
+            <ul class="nav flex-column mb-auto">
+                <li><a class="nav-link {{ request()->routeIs('types-bouteilles.*') ? 'active' : '' }}" href="{{ route('types-bouteilles.index') }}"><i class="bi bi-tags"></i> Produits</a></li>
+                <li><a class="nav-link {{ request()->routeIs('marques.*') ? 'active' : '' }}" href="{{ route('marques.index') }}"><i class="bi bi-award"></i> Marques</a></li>
+                <li><a class="nav-link {{ request()->routeIs('fournisseurs.*') ? 'active' : '' }}" href="{{ route('fournisseurs.index') }}"><i class="bi bi-truck"></i> Fournisseurs</a></li>
+            </ul>
+        @endif
 
-                <div class="d-grid gap-2">
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <button type="submit" class="btn btn-sm btn-outline-danger w-100">
-                            <i class="bi bi-box-arrow-right"></i> Déconnexion
-                        </button>
-                    </form>
-                </div>
-            </nav>
-
-            <!-- Main Content -->
-            <main class="col-md-10 ms-sm-auto px-md-4">
-                <!-- Navbar top -->
-                <nav class="navbar navbar-expand-lg navbar-custom mb-4">
-                    <div class="container-fluid">
-                        <span class="navbar-text">
-                            Bienvenue <strong>{{ Auth::user()->nom_complet }}</strong>
-                        </span>
-                        <div class="ms-auto">
-                            <span class="text-muted small">
-                                <i class="bi bi-calendar"></i> {{ now()->format('d/m/Y H:i') }}
-                            </span>
-                        </div>
-                    </div>
-                </nav>
-
-                <!-- Flash Messages -->
-                @if(session('success'))
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        <i class="bi bi-check-circle"></i> {{ session('success') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                @endif
-
-                @if(session('error'))
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <i class="bi bi-exclamation-circle"></i> {{ session('error') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                @endif
-
-                <!-- Page Content -->
-                <div class="main-content">
-                    @yield('content')
-                </div>
-            </main>
+        <div class="mt-5 px-3">
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit" class="btn btn-sm w-100 text-white text-opacity-50 hover-danger p-2 text-start">
+                    <i class="bi bi-power"></i> Déconnexion
+                </button>
+            </form>
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <div class="main-wrapper">
+        <header class="top-navbar">
+            <div class="d-flex align-items-center">
+                <span class="text-secondary small fw-medium">
+                    <i class="bi bi-geo-alt me-1"></i> Dépôt Central • Activé
+                </span>
+            </div>
+            
+            <div class="d-flex align-items-center gap-4">
+                <div class="text-end d-none d-md-block">
+                    <p class="mb-0 fw-bold small text-navy">{{ Auth::user()->nom_complet }}</p>
+                    <small class="text-muted font-2xs text-uppercase">Administrateur</small>
+                </div>
+                <div class="avatar-circle-sm bg-light text-navy fw-bold d-flex align-items-center justify-content-center" style="width: 32px; height: 32px; border-radius: 8px;">
+                    {{ substr(Auth::user()->nom_complet, 0, 1) }}
+                </div>
+            </div>
+        </header>
+
+        <main class="content-area">
+            <!-- Flash Messages -->
+            @if(session('success'))
+                <div class="alert alert-success border-0 shadow-sm animate__animated animate__fadeInDown" role="alert">
+                    <i class="bi bi-check-circle me-2"></i> {{ session('success') }}
+                </div>
+            @endif
+
+            @if(session('error'))
+                <div class="alert alert-danger border-0 shadow-sm animate__animated animate__shakeX" role="alert">
+                    <i class="bi bi-exclamation-triangle me-2"></i> {{ session('error') }}
+                </div>
+            @endif
+
+            @yield('content')
+        </main>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Auto-dismiss alerts after 5 seconds
+            // Auto-dismiss alerts
             const alerts = document.querySelectorAll('.alert');
             alerts.forEach(alert => {
                 setTimeout(() => {
-                    const bsAlert = new bootstrap.Alert(alert);
-                    bsAlert.close();
-                }, 5000);
+                    alert.classList.add('animate__fadeOutUp');
+                    setTimeout(() => alert.remove(), 500);
+                }, 4000);
             });
         });
     </script>
+
+    <style>
+        .hover-danger:hover {
+            color: #ef4444 !important;
+            background: rgba(239, 68, 68, 0.1);
+        }
+    </style>
 
     @yield('scripts')
 </body>

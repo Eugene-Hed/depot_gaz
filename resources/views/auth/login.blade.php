@@ -3,165 +3,146 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ config('app.name') }} - Connexion</title>
+    <title>Connexion | {{ config('app.name') }}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-            background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
+        :root {
+            --navy: #0f172a;
+            --slate: #475569;
+            --light-navy: #f1f5f9;
         }
-        
-        .login-container {
+        body {
+            background-color: #f8fafc;
+            font-family: 'Inter', sans-serif;
+            color: var(--navy);
             min-height: 100vh;
             display: flex;
             align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
-            position: relative;
         }
-        
-        .login-container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: 
-                radial-gradient(circle at 20% 50%, rgba(102, 126, 234, 0.05) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(118, 75, 162, 0.05) 0%, transparent 50%);
-            pointer-events: none;
-        }
-        
-        .login-box {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        .auth-container {
             width: 100%;
-            max-width: 420px;
-            padding: 50px 40px;
-            z-index: 1;
-            border: 1px solid rgba(0,0,0,0.05);
+            max-width: 440px;
+            margin: auto;
+            padding: 20px;
         }
-        
-        .login-box h1 {
-            text-align: center;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 10px;
-            font-size: 32px;
-            font-weight: 700;
+        .card-login {
+            background: #ffffff;
+            border: 1px solid rgba(15, 23, 42, 0.08);
+            border-radius: 24px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.04), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+            overflow: hidden;
         }
-        
-        .login-subtitle {
-            text-align: center;
-            color: #999;
-            font-size: 14px;
-            margin-bottom: 30px;
+        .ls-wide { letter-spacing: 0.05em; }
+        .font-2xs { font-size: 0.7rem; }
+        .bg-navy { background-color: var(--navy) !important; }
+        .text-navy { color: var(--navy) !important; }
+        .btn-navy {
+            background-color: var(--navy);
+            color: white;
+            transition: all 0.2s;
+        }
+        .btn-navy:hover {
+            background-color: #1e293b;
+            color: white;
+            transform: translateY(-1px);
+        }
+        .form-control-corp {
+            background-color: #f1f5f9;
+            border: 2px solid transparent;
+            border-radius: 12px;
+            padding: 12px 16px;
             font-weight: 500;
+            transition: all 0.2s;
         }
-        
-        .form-control {
-            border: 2px solid #f0f0f0;
-            border-radius: 8px;
-            padding: 12px 15px;
-            transition: all 0.3s ease;
-            background-color: #f9f9f9;
+        .form-control-corp:focus {
+            background-color: #ffffff;
+            border-color: var(--navy);
+            box-shadow: 0 0 0 4px rgba(15, 23, 42, 0.05);
+            outline: none;
         }
-        
-        .form-control:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
-            background-color: white;
-        }
-        
-        .form-label {
-            color: #333;
-            font-weight: 600;
-            margin-bottom: 8px;
-            font-size: 14px;
-        }
-        
-        .btn-login {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: none;
-            width: 100%;
-            padding: 12px;
-            font-weight: 600;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            margin-top: 10px;
+        .brand-icon {
+            width: 56px;
+            height: 56px;
+            background-color: var(--navy);
             color: white;
-        }
-        
-        .btn-login:hover {
-            color: white;
-            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
-        }
-        
-        .form-check-label {
-            color: #666;
-            font-size: 14px;
-        }
-        
-        .alert {
-            border-radius: 8px;
-            border: none;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            font-size: 1.5rem;
+            box-shadow: 0 8px 16px -4px rgba(15, 23, 42, 0.2);
         }
     </style>
 </head>
 <body>
-    <div class="login-container">
-        <div class="login-box">
-            <h1>{{ config('app.name') }}</h1>
-            <p class="login-subtitle">Gestion de Stock Dépôt GAZ</p>
 
-            @if ($errors->any())
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <strong>Erreur !</strong>
-                    @foreach ($errors->all() as $error)
-                        <div>{{ $error }}</div>
-                    @endforeach
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    <div class="auth-container">
+        <div class="text-center mb-5">
+            <h1 class="h4 fw-extrabold text-navy text-uppercase ls-wide mb-1">Dépôt Gaz <span class="text-secondary fw-normal">| Platform</span></h1>
+            <p class="text-muted small">Solution de gestion intelligente de stocks</p>
+        </div>
+
+        <div class="card-login">
+            <div class="p-4 p-md-5">
+                <div class="brand-icon">
+                    <i class="bi bi-box-seam-fill"></i>
                 </div>
-            @endif
+                
+                <h4 class="fw-bold text-center text-navy mb-4">Accès Backend</h4>
 
-            <form method="POST" action="{{ route('login') }}">
-                @csrf
+                @if ($errors->any())
+                    <div class="alert alert-danger border-0 rounded-4 p-3 mb-4 small">
+                        @foreach ($errors->all() as $error)
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                                <span>{{ $error }}</span>
+                            </div>
+                        @endforeach
+                    </div>
+                @endif
 
-                <div class="mb-3">
-                    <label for="username" class="form-label">Identifiant</label>
-                    <input type="text" class="form-control @error('username') is-invalid @enderror"
-                        id="username" name="username" value="{{ old('username') }}" required autofocus>
-                    @error('username')
-                        <span class="invalid-feedback">{{ $message }}</span>
-                    @enderror
-                </div>
+                <form method="POST" action="{{ route('login') }}">
+                    @csrf
 
-                <div class="mb-3">
-                    <label for="password" class="form-label">Mot de passe</label>
-                    <input type="password" class="form-control @error('password') is-invalid @enderror"
-                        id="password" name="password" required>
-                    @error('password')
-                        <span class="invalid-feedback">{{ $message }}</span>
-                    @enderror
-                </div>
+                    <div class="mb-3">
+                        <label for="username" class="font-2xs text-muted fw-bold text-uppercase ls-wide mb-2 d-block">Identifiant Agent</label>
+                        <input type="text" class="form-control form-control-corp @error('username') is-invalid @enderror"
+                            id="username" name="username" value="{{ old('username') }}" required autofocus placeholder="Nom d'utilisateur">
+                    </div>
 
-                <div class="mb-3 form-check">
-                    <input type="checkbox" class="form-check-input" id="remember" name="remember">
-                    <label class="form-check-label" for="remember">
-                        Se souvenir de moi
-                    </label>
-                </div>
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <label for="password" class="font-2xs text-muted fw-bold text-uppercase ls-wide mb-0 d-block">Mot de Passe</label>
+                        </div>
+                        <input type="password" class="form-control form-control-corp @error('password') is-invalid @enderror"
+                            id="password" name="password" required placeholder="••••••••">
+                    </div>
 
-                <button type="submit" class="btn btn-primary btn-login">Se connecter</button>
-            </form>
+                    <div class="mb-4 d-flex align-items-center">
+                        <input class="form-check-input mt-0" type="checkbox" name="remember" id="remember" checked>
+                        <label class="form-check-label ms-2 small text-secondary" for="remember">
+                            Maintenir la session active
+                        </label>
+                    </div>
+
+                    <div class="d-grid shadow-sm">
+                        <button type="submit" class="btn btn-navy btn-lg rounded-pill fw-bold py-3 text-uppercase ls-wide small">
+                            Authentification
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="bg-light p-4 border-top text-center">
+                <p class="font-2xs text-muted mb-0">Sécurité Opérationnelle &middot; Traçabilité Logistique</p>
+            </div>
+        </div>
+
+        <div class="text-center mt-5">
+            <p class="font-2xs text-muted opacity-50">&copy; {{ date('Y') }} Eugene-Hed. Système de distribution de gaz.</p>
         </div>
     </div>
 

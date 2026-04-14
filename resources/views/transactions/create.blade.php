@@ -1,382 +1,336 @@
 @extends('layouts.app')
 
-@section('title', 'Nouvelle transaction')
+@section('title', 'Nouvelle Opération')
 
 @section('content')
-    <div class="row mb-4">
-        <div class="col-md-8">
-            <h1><i class="bi bi-plus-circle"></i> Nouvelle transaction</h1>
-        </div>
-        <div class="col-md-4 text-end">
-            <a href="{{ route('transactions.index') }}" class="btn btn-secondary">
-                <i class="bi bi-arrow-left"></i> Retour
-            </a>
-        </div>
+<div class="row mb-5 align-items-end">
+    <div class="col-md-8">
+        <h1 class="h3 fw-bold text-navy mb-1 text-uppercase ls-wide">Enregistrer une Opération</h1>
+        <p class="text-secondary small mb-0">Ventes, échanges et régularisations de stock</p>
     </div>
+    <div class="col-md-4 text-md-end mt-3 mt-md-0">
+        <a href="{{ route('transactions.index') }}" class="btn btn-light btn-sm border rounded-pill px-3 fw-bold">
+            <i class="bi bi-arrow-left me-1"></i> Retour au journal
+        </a>
+    </div>
+</div>
 
-    <div class="row">
-        <div class="col-md-8">
-            <div class="card shadow-sm">
-                <div class="card-header bg-light">
-                    <h5 class="mb-0"><i class="bi bi-receipt"></i> Formulaire de transaction</h5>
-                </div>
-                <div class="card-body">
-                    <form action="{{ route('transactions.store') }}" method="POST">
-                        @csrf
+<div class="row g-4">
+    <div class="col-lg-8">
+        <div class="card card-corporate border-0 shadow-sm">
+            <div class="card-header bg-navy text-white p-4">
+                <h6 class="mb-0 fw-bold text-uppercase ls-wide small"><i class="bi bi-receipt me-2"></i> Détails de la Transaction</h6>
+            </div>
+            <div class="card-body p-4">
+                <form action="{{ route('transactions.store') }}" method="POST" id="transactionForm">
+                    @csrf
 
-                        <!-- Type de transaction -->
-                        <div class="mb-4">
-                            <label for="type" class="form-label fw-bold">
-                                <i class="bi bi-arrow-left-right"></i> Type de transaction *
-                            </label>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <input type="radio" class="btn-check" name="type" id="type_echange_simple" 
-                                        value="echange_simple" {{ old('type') == 'echange_simple' || !old('type') ? 'checked' : '' }}>
-                                    <label class="btn btn-outline-success w-100" for="type_echange_simple">
-                                        <i class="bi bi-arrow-left-right"></i> Échange simple
-                                    </label>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <input type="radio" class="btn-check" name="type" id="type_echange_type" 
-                                        value="echange_type" {{ old('type') == 'echange_type' ? 'checked' : '' }}>
-                                    <label class="btn btn-outline-warning w-100" for="type_echange_type">
-                                        <i class="bi bi-arrow-left-right"></i> Échange type
-                                    </label>
-                                </div>
-
-                                <div class="col-md-6 mt-2">
-                                    <input type="radio" class="btn-check" name="type" id="type_achat_simple" 
-                                        value="achat_simple" {{ old('type') == 'achat_simple' ? 'checked' : '' }}>
-                                    <label class="btn btn-outline-primary w-100" for="type_achat_simple">
-                                        <i class="bi bi-bag-plus"></i> Achat simple
-                                    </label>
-                                </div>
-
-
-                            </div>
-                            @error('type')
-                                <span class="invalid-feedback d-block">{{ $message }}</span>
-                            @enderror
-                        </div>
-
-                        <!-- Client -->
-                        <div class="mb-4">
-                            <label for="id_client" class="form-label fw-bold">
-                                <i class="bi bi-person"></i> Client (optionnel)
-                            </label>
-                            <select class="form-select form-select-lg @error('id_client') is-invalid @enderror" 
-                                id="id_client" name="id_client">
-                                <option value="">-- Aucun client --</option>
-                                @foreach($clients as $client)
-                                    <option value="{{ $client->id }}" {{ old('id_client') == $client->id ? 'selected' : '' }}>
-                                        {{ $client->nom }} ({{ $client->telephone ?? 'N/A' }})
-                                    </option>
-                                @endforeach
-                            </select>
-                            @error('id_client')
-                                <span class="invalid-feedback">{{ $message }}</span>
-                            @enderror
-                        </div>
-
-                        <!-- Produit et ancien produit (pour échange type) -->
-                        <div class="row mb-4">
-                            <div class="col-md-6">
-                                <label for="id_type_bouteille" class="form-label fw-bold">
-                                    <i class="bi bi-box"></i> Produit reçu *
+                    <!-- Type de transaction -->
+                    <div class="mb-5">
+                        <label class="small text-muted fw-bold text-uppercase mb-3 d-block">1. Nature de l'opération</label>
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <input type="radio" class="btn-check" name="type" id="type_echange_simple" 
+                                    value="echange_simple" {{ old('type') == 'echange_simple' || !old('type') ? 'checked' : '' }}>
+                                <label class="btn btn-outline-navy w-100 py-3 rounded-4 d-flex flex-column align-items-center" for="type_echange_simple">
+                                    <i class="bi bi-arrow-left-right mb-2 fs-5"></i>
+                                    <span class="fw-bold small">Échange Standard</span>
                                 </label>
-                                <select class="form-select form-select-lg @error('id_type_bouteille') is-invalid @enderror" 
+                            </div>
+
+                            <div class="col-md-4">
+                                <input type="radio" class="btn-check" name="type" id="type_echange_type" 
+                                    value="echange_type" {{ old('type') == 'echange_type' ? 'checked' : '' }}>
+                                <label class="btn btn-outline-navy w-100 py-3 rounded-4 d-flex flex-column align-items-center" for="type_echange_type">
+                                    <i class="bi bi-shuffle mb-2 fs-5"></i>
+                                    <span class="fw-bold small">Échange Spécifiant</span>
+                                </label>
+                            </div>
+
+                            <div class="col-md-4">
+                                <input type="radio" class="btn-check" name="type" id="type_achat_simple" 
+                                    value="achat_simple" {{ old('type') == 'achat_simple' ? 'checked' : '' }}>
+                                <label class="btn btn-outline-navy w-100 py-3 rounded-4 d-flex flex-column align-items-center" for="type_achat_simple">
+                                    <i class="bi bi-cart-plus mb-2 fs-5"></i>
+                                    <span class="fw-bold small">Achat Simple</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Client Section -->
+                    <div class="mb-5 p-4 bg-light rounded-4 border">
+                        <label for="id_client" class="small text-muted fw-bold text-uppercase mb-2 d-block">2. Identification Client</label>
+                        <select class="form-select form-select-lg border-0 shadow-none @error('id_client') is-invalid @enderror" 
+                            id="id_client" name="id_client" style="background-color: transparent; font-weight: 600;">
+                            <option value="">Client de passage (Anonyme)</option>
+                            @foreach($clients as $client)
+                                <option value="{{ $client->id }}" {{ old('id_client') == $client->id ? 'selected' : '' }}>
+                                    {{ $client->nom_complet }} ({{ $client->telephone ?: 'Sans Tél' }})
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('id_client')
+                            <span class="invalid-feedback">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <!-- Produits Section -->
+                    <div class="mb-5">
+                        <label class="small text-muted fw-bold text-uppercase mb-3 d-block">3. Sélection des articles</label>
+                        <div class="row g-4">
+                            <div class="col-md-6" id="container-produit">
+                                <label for="id_type_bouteille" class="small fw-bold text-navy mb-2 d-block">Article Sortant (Plein)</label>
+                                <select class="form-select @error('id_type_bouteille') is-invalid @enderror" 
                                     id="id_type_bouteille" name="id_type_bouteille" required onchange="updatePrice()">
-                                    <option value="">-- Sélectionner un produit --</option>
+                                    <option value="">-- Choisir le produit --</option>
                                     @foreach($types as $type)
                                         <option value="{{ $type->id }}" 
                                             data-prix="{{ $type->prix_vente ?? 0 }}"
-                                            data-consigne="{{ $type->prix_consigne ?? 0 }}"
                                             data-recharge="{{ $type->prix_recharge ?? 0 }}"
+                                            data-consigne="{{ $type->prix_consigne ?? 0 }}"
                                             data-stock="{{ $type->stock->quantite_pleine ?? 0 }}"
                                             {{ old('id_type_bouteille') == $type->id ? 'selected' : '' }}>
-                                            {{ $type->marque->nom }} - {{ $type->nom }} ({{ $type->taille }}kg)
+                                            {{ $type->marque->nom }} - {{ $type->nom }} ({{ $type->taille }})
                                         </option>
                                     @endforeach
                                 </select>
-                                @error('id_type_bouteille')
-                                    <span class="invalid-feedback">{{ $message }}</span>
-                                @enderror
-                                <div class="d-flex justify-content-between mt-2">
-                                    <small class="text-muted">Stock: <span id="stock-info" class="badge bg-info">0</span></small>
-                                    <small class="text-muted">Consigne: <span id="consigne-info" class="badge bg-secondary">0 F</span></small>
-                                    <small class="text-muted">Recharge: <span id="recharge-info" class="badge bg-secondary">0 F</span></small>
+                                <div class="mt-2 text-end">
+                                    <span class="badge badge-subtle font-2xs">Stock: <span id="stock-info">0</span></span>
                                 </div>
                             </div>
 
                             <div class="col-md-6" id="container-ancien" style="display: none;">
-                                <label for="id_type_ancien" class="form-label fw-bold">
-                                    <i class="bi bi-box-arrow-in-left"></i> Bouteille vide retournée (Entrée) *
-                                </label>
-                                <select class="form-select form-select-lg" 
-                                    id="id_type_ancien" name="id_type_ancien" onchange="updatePrice()">
-                                    <option value="">-- Sélectionner le modèle retourné --</option>
+                                <label for="id_type_ancien" class="small fw-bold text-navy mb-2 d-block">Bouteille Vide Rendue</label>
+                                <select class="form-select" id="id_type_ancien" name="id_type_ancien" onchange="updatePrice()">
+                                    <option value="">-- Modèle retourné --</option>
                                     @foreach($types as $type)
                                         <option value="{{ $type->id }}" 
                                             data-consigne="{{ $type->prix_consigne ?? 0 }}"
                                             {{ old('id_type_ancien') == $type->id ? 'selected' : '' }}>
-                                            {{ $type->marque->nom }} - {{ $type->nom }} ({{ $type->taille }}kg)
+                                            {{ $type->marque->nom }} - {{ $type->taille }}
                                         </option>
                                     @endforeach
                                 </select>
-                                <div class="mt-2">
-                                    <small class="text-muted">Valeur Consigne: <span id="consigne-ancien-info" class="badge bg-secondary">0 F</span></small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tarification -->
+                    <div class="mb-5">
+                        <label class="small text-muted fw-bold text-uppercase mb-3 d-block">4. Quantité & Prix</label>
+                        <div class="row g-4 align-items-center">
+                            <div class="col-md-3">
+                                <label for="quantite" class="small fw-bold text-navy mb-2 d-block">Quantité</label>
+                                <input type="number" class="form-control text-center fw-bold" id="quantite" name="quantite" value="{{ old('quantite', 1) }}" min="1" required onchange="updateTotal()">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="prix_unitaire" class="small fw-bold text-navy mb-2 d-block">Prix Unitaire (F)</label>
+                                <input type="number" class="form-control fw-bold text-navy" id="prix_unitaire" name="prix_unitaire" value="{{ old('prix_unitaire', 0) }}" step="1" required onchange="updateTotal()">
+                            </div>
+                            <div class="col-md-5">
+                                <label class="small fw-bold text-navy mb-2 d-block">Total à Payer</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control form-control-lg fw-extrabold text-navy bg-light border-0" id="montant_total_display" value="0 F" readonly>
+                                    <input type="hidden" name="montant_total" id="montant_total_hidden">
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-                        <!-- Quantité -->
-                        <div class="mb-4">
-                            <label for="quantite" class="form-label fw-bold">
-                                <i class="bi bi-123"></i> Quantité *
-                            </label>
-                            <input type="number" class="form-control form-control-lg @error('quantite') is-invalid @enderror" 
-                                id="quantite" name="quantite" value="{{ old('quantite', 1) }}" min="1" required onchange="updateTotal()">
-                            @error('quantite')
-                                <span class="invalid-feedback">{{ $message }}</span>
-                            @enderror
+                    <!-- Finalisation -->
+                    <div class="row g-4 mb-5">
+                        <div class="col-md-6">
+                            <label for="mode_paiement" class="small text-muted fw-bold text-uppercase mb-2 d-block">Mode de Règlement</label>
+                            <select class="form-select" id="mode_paiement" name="mode_paiement">
+                                <option value="especes">En Espèces</option>
+                                <option value="orange_money">Orange Money</option>
+                                <option value="momo">MTN MoMo</option>
+                                <option value="virement">Virement Bancaire</option>
+                            </select>
                         </div>
-
-                        <!-- Prix -->
-                        <div class="row mb-4">
-                            <div class="col-md-6">
-                                <label for="prix_unitaire" class="form-label fw-bold">
-                                    <i class="bi bi-tag"></i> Prix unitaire *
-                                </label>
-                                <input type="number" class="form-control form-control-lg @error('prix_unitaire') is-invalid @enderror" 
-                                    id="prix_unitaire" name="prix_unitaire" value="{{ old('prix_unitaire', 0) }}" 
-                                    step="1" required onchange="updateTotal()">
-                                @error('prix_unitaire')
-                                    <span class="invalid-feedback">{{ $message }}</span>
-                                @enderror
-                                <small class="text-muted d-block mt-2">
-                                    Prix suggéré: <span id="prix-info" class="badge bg-secondary">0 F</span>
-                                    <span class="badge bg-light text-dark border"><i class="bi bi-pencil"></i> Modifiable</span>
-                                </small>
-                            </div>
-
-                            <div class="col-md-6">
-                                <label for="montant_total" class="form-label fw-bold">
-                                    <i class="bi bi-cash"></i> Montant total *
-                                </label>
-                                <input type="number" class="form-control form-control-lg @error('montant_total') is-invalid @enderror" 
-                                    id="montant_total" name="montant_total" value="{{ old('montant_total', 0) }}" 
-                                    step="1" required readonly>
-                                @error('montant_total')
-                                    <span class="invalid-feedback">{{ $message }}</span>
-                                @enderror
-                            </div>
+                        <div class="col-md-6">
+                            <label for="commentaire" class="small text-muted fw-bold text-uppercase mb-2 d-block">Description / Note Interne</label>
+                            <input type="text" class="form-control" id="commentaire" name="commentaire" placeholder="Ex: Livraison différée, remise accordée...">
                         </div>
+                    </div>
 
-                        <!-- Paiement et commentaire -->
-                        <div class="row mb-4">
-                            <div class="col-md-6">
-                                <label for="mode_paiement" class="form-label fw-bold">
-                                    <i class="bi bi-wallet2"></i> Mode de paiement
-                                </label>
-                                <select class="form-select" id="mode_paiement" name="mode_paiement">
-                                    <option value="">-- Sélectionner --</option>
-                                    <option value="especes" {{ old('mode_paiement') == 'especes' ? 'selected' : '' }}>
-                                        <i class="bi bi-coin"></i> Espèces
-                                    </option>
-                                    <option value="cheque" {{ old('mode_paiement') == 'cheque' ? 'selected' : '' }}>
-                                        <i class="bi bi-receipt"></i> Chèque
-                                    </option>
-                                    <option value="carte" {{ old('mode_paiement') == 'carte' ? 'selected' : '' }}>
-                                        <i class="bi bi-credit-card"></i> Carte
-                                    </option>
-                                    <option value="virement" {{ old('mode_paiement') == 'virement' ? 'selected' : '' }}>
-                                        <i class="bi bi-bank"></i> Virement
-                                    </option>
-                                </select>
-                            </div>
-
-                            <div class="col-md-6">
-                                <label for="commentaire" class="form-label fw-bold">
-                                    <i class="bi bi-chat-dots"></i> Commentaire
-                                </label>
-                                <input type="text" class="form-control" id="commentaire" name="commentaire" 
-                                    value="{{ old('commentaire') }}" placeholder="Notes supplémentaires...">
-                            </div>
-                        </div>
-
-                        <!-- Boutons -->
-                        <div class="d-flex gap-2">
-                            <button type="submit" class="btn btn-primary btn-lg">
-                                <i class="bi bi-check-circle"></i> Enregistrer transaction
-                            </button>
-                            <a href="{{ route('transactions.index') }}" class="btn btn-secondary btn-lg">
-                                <i class="bi bi-x-circle"></i> Annuler
-                            </a>
-                        </div>
-                    </form>
-                </div>
+                    <div class="d-flex gap-3 border-top pt-4">
+                        <button type="submit" class="btn btn-navy rounded-pill px-5 fw-bold">
+                            Confirmer & Enregistrer
+                        </button>
+                        <a href="{{ route('transactions.index') }}" class="btn btn-light rounded-pill px-4 border small fw-bold">
+                            Abandonner
+                        </a>
+                    </div>
+                </form>
             </div>
         </div>
 
-        <!-- Panel informatif -->
-        <div class="col-md-4">
-            <div class="card shadow-sm bg-light">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0"><i class="bi bi-lightbulb"></i> Types de transactions</h5>
-                </div>
-                <div class="card-body">
-                    <div class="mb-3">
-                        <p class="mb-2">
-                            <span class="badge bg-success">Échange simple</span>
-                        </p>
-                        <p class="small text-muted">
-                            Client retourne une bouteille vide du <strong>même type</strong> et reçoit une bouteille pleine en échange.
-                        </p>
-                    </div>
-
-                    <hr>
-
-                    <div class="mb-3">
-                        <p class="mb-2">
-                            <span class="badge bg-warning">Échange type</span>
-                        </p>
-                        <p class="small text-muted">
-                            Client retourne une bouteille vide d'un type et reçoit une bouteille pleine d'un <strong>autre type</strong>.
-                        </p>
-                    </div>
-
-                    <hr>
-
-                    <div class="mb-3">
-                        <p class="mb-2">
-                            <span class="badge bg-primary">Achat simple</span>
-                        </p>
-                        <p class="small text-muted">
-                            Client achète une bouteille pleine <strong>sans retourner de vide</strong>. (Nouveau client ou vente standard)
-                        </p>
-                    </div>
-
-                    <hr>
-
-
-
-                    <hr class="my-3">
-
-                    <div class="alert alert-info">
-                        <i class="bi bi-info-circle"></i>
-                        <strong>Rappel:</strong> Le gérant fixe le prix de chaque transaction manuellement.
-                    </div>
+        <!-- Section Historique Récent -->
+        <div class="card card-corporate border-0 shadow-sm mt-4 overflow-hidden">
+            <div class="card-header bg-light p-3 border-bottom d-flex justify-content-between align-items-center">
+                <h6 class="mb-0 fw-bold text-navy text-uppercase ls-wide small">Dernières Opérations Enregistrées</h6>
+                <a href="{{ route('transactions.index') }}" class="font-2xs text-navy fw-bold text-decoration-none">Voir tout le journal</a>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-sm align-middle mb-0" style="font-size: 0.75rem;">
+                        <thead class="bg-light-subtle text-muted">
+                            <tr>
+                                <th class="ps-3 py-2">HEURE</th>
+                                <th>CLIENT</th>
+                                <th>ARTICLE</th>
+                                <th>DESCRIPTION</th>
+                                <th class="text-end pe-3">MONTANT</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($recentTransactions as $rt)
+                                <tr>
+                                    <td class="ps-3 py-2 text-secondary">{{ $rt->created_at->format('H:i') }}</td>
+                                    <td class="fw-bold">{{ $rt->client->nom_complet ?? 'Passant' }}</td>
+                                    <td>{{ $rt->typeBouteille->nom }}</td>
+                                    <td class="italic text-muted text-truncate" style="max-width: 150px;" title="{{ $rt->commentaire }}">
+                                        {{ $rt->commentaire ?: '-' }}
+                                    </td>
+                                    <td class="text-end pe-3 fw-bold text-navy">{{ number_format($rt->montant_net, 0, ',', ' ') }} F</td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="5" class="text-center py-3 text-muted">Aucune opération aujourd'hui.</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
 
-    <script>
-        function updatePrice() {
-            const select = document.getElementById('id_type_bouteille');
-            const option = select.options[select.selectedIndex];
-            if (!option.value) return;
-
-            const prixPleine = parseFloat(option.dataset.prix) || 0;
-            const consigne = parseFloat(option.dataset.consigne) || 0;
-            const recharge = parseFloat(option.dataset.recharge) || 0;
-            const stock = option.dataset.stock || 0;
-            
-            document.getElementById('stock-info').textContent = stock;
-            document.getElementById('consigne-info').textContent = consigne.toLocaleString() + ' F';
-            document.getElementById('recharge-info').textContent = recharge.toLocaleString() + ' F';
-            document.getElementById('prix-info').textContent = prixPleine.toLocaleString() + ' F';
-
-            // Mise à jour infos bouteille ancienne (si présente)
-            const selectAncien = document.getElementById('id_type_ancien');
-            const consigneAncienInfo = document.getElementById('consigne-ancien-info');
-            if (selectAncien.options[selectAncien.selectedIndex]) {
-                const optionAncien = selectAncien.options[selectAncien.selectedIndex];
-                const consigneAncien = parseFloat(optionAncien.dataset.consigne) || 0;
-                consigneAncienInfo.textContent = optionAncien.value ? consigneAncien.toLocaleString() + ' F' : '0 F';
-            }
-
-            // Automatisation du prix unitaire selon le type
-            const typeTransaction = document.querySelector('input[name="type"]:checked').value;
-            let prixSuggere = 0;
-
-            const containerNouveau = document.getElementById('id_type_bouteille').closest('.col-md-6') || document.getElementById('id_type_bouteille').closest('.col-md-12');
-
-            if (typeTransaction === 'achat_simple' || typeTransaction === 'echange_simple') {
-                prixSuggere = (typeTransaction === 'achat_simple') ? prixPleine : recharge;
-                if (containerNouveau) {
-                    containerNouveau.classList.remove('col-md-6');
-                    containerNouveau.classList.add('col-md-12');
-                }
-            } else if (typeTransaction === 'echange_type') {
-                prixSuggere = recharge;
-                if (containerNouveau) {
-                    containerNouveau.classList.remove('col-md-12');
-                    containerNouveau.classList.add('col-md-6');
-                }
+    <div class="col-lg-4">
+        <div class="card card-corporate border-0 shadow-sm bg-navy text-white h-100">
+            <div class="card-body p-4">
+                <h6 class="fw-bold text-uppercase ls-wide small mb-4 opacity-75">Vérification & Guide</h6>
                 
-                const optionAncien = selectAncien.options[selectAncien.selectedIndex];
-                if (optionAncien && optionAncien.value) {
-                    const consigneAncien = parseFloat(optionAncien.dataset.consigne) || 0;
-                    const diff = consigne - consigneAncien;
-                    if (diff > 0) {
-                        prixSuggere += diff;
-                    }
-                }
-            }
+                <!-- Zone de Description Dynamique (Nature de l'opération) -->
+                <div class="mb-4 p-3 rounded-4 bg-white shadow-sm border" id="nature-desc-box">
+                    <small class="text-muted fw-bold text-uppercase font-2xs d-block mb-2">Nature d'Opération Sélectionnée</small>
+                    <p class="text-navy small mb-0 fw-medium" id="nature-description">Veuillez choisir un type d'opération...</p>
+                </div>
 
-            document.getElementById('prix_unitaire').value = prixSuggere;
-            
-            updateTotal();
-            toggleEchangeTypeFields();
-        }
+                <div class="info-box mb-4 p-3 rounded-4 bg-white bg-opacity-10 border border-white border-opacity-10">
+                    <p class="small mb-1 text-white text-opacity-75">Tarif unitaire applicable</p>
+                    <h4 class="fw-bold mb-0 text-white" id="guide-prix">0 <small class="font-2xs">F</small></h4>
+                </div>
 
-        function updateTotal() {
-            const prix = parseFloat(document.getElementById('prix_unitaire').value) || 0;
-            const qte = parseInt(document.getElementById('quantite').value) || 0;
-            const total = prix * qte;
-            document.getElementById('montant_total').value = total.toFixed(0);
-        }
+                <div class="info-list small">
+                    <div class="d-flex justify-content-between mb-3">
+                        <span class="opacity-75">Recharge Gaz</span>
+                        <span class="fw-bold" id="guide-recharge">0 F</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-3">
+                        <span class="opacity-75">Consigne Support</span>
+                        <span class="fw-bold" id="guide-consigne">0 F</span>
+                    </div>
+                    <hr class="opacity-10">
+                    <div class="mt-4 p-3 rounded-3 bg-light-subtle text-navy border" style="background-color: #f1f5f9 !important;">
+                        <p class="fw-bold mb-2 small"><i class="bi bi-info-circle me-1"></i> Rappel métier :</p>
+                        <ul class="ps-3 mb-0 font-2xs">
+                            <li class="mb-2"><strong>Standard :</strong> Bouteille pleine contre identique.</li>
+                            <li class="mb-2"><strong>Spécifiant :</strong> Vide de marque différente.</li>
+                            <li><strong>Achat :</strong> Vente sans bouteille retournée.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-        function toggleEchangeTypeFields() {
-            const typeValue = document.querySelector('input[name="type"]:checked').value;
-            const containerAncien = document.getElementById('container-ancien');
+<script>
+    const descriptions = {
+        'echange_simple': 'Échange Standard : Le client rend une bouteille vide de la même marque pour prendre une pleine. Il ne paie que le gaz (la recharge).',
+        'echange_type': 'Échange Spécifiant : Le client rend une bouteille vide d\'une marque différente. Le prix inclut la recharge et l\'éventuel complément de consigne.',
+        'achat_simple': 'Achat Simple : Le client achète une bouteille pleine neuve sans rien ramener. Il paie la bouteille (fer) et le gaz (recharge).'
+    };
+
+    function updatePrice() {
+        const select = document.getElementById('id_type_bouteille');
+        const option = select.options[select.selectedIndex];
+        
+        const typeTransaction = document.querySelector('input[name="type"]:checked').value;
+        const descArea = document.getElementById('nature-description');
+        descArea.textContent = descriptions[typeTransaction] || 'Veuillez sélectionner une nature d\'opération.';
+
+        if (!option.value) return;
+
+        const prixVente = parseFloat(option.dataset.prix) || 0;
+        const consigne = parseFloat(option.dataset.consigne) || 0;
+        const recharge = parseFloat(option.dataset.recharge) || 0;
+        const stock = option.dataset.stock || 0;
+        
+        document.getElementById('stock-info').textContent = stock;
+        document.getElementById('guide-prix').textContent = prixVente.toLocaleString();
+        document.getElementById('guide-consigne').textContent = consigne.toLocaleString() + ' F';
+        document.getElementById('guide-recharge').textContent = recharge.toLocaleString() + ' F';
+
+        let prixSuggere = 0;
+
+        if (typeTransaction === 'achat_simple') {
+            prixSuggere = prixVente;
+        } else if (typeTransaction === 'echange_simple') {
+            prixSuggere = recharge;
+        } else if (typeTransaction === 'echange_type') {
+            prixSuggere = recharge;
             const selectAncien = document.getElementById('id_type_ancien');
-
-            if (typeValue === 'echange_type') {
-                containerAncien.style.display = 'block';
-                selectAncien.setAttribute('required', 'required');
-            } else {
-                containerAncien.style.display = 'none';
-                selectAncien.removeAttribute('required');
+            const optionAncien = selectAncien.options[selectAncien.selectedIndex];
+            if (optionAncien && optionAncien.value) {
+                const consigneAncien = parseFloat(optionAncien.dataset.consigne) || 0;
+                const diff = consigne - consigneAncien;
+                if (diff > 0) prixSuggere += diff;
             }
         }
 
-        // Écouter les changements sur tout ce qui impacte le prix
-        document.querySelectorAll('input[name="type"]').forEach(radio => {
-            radio.addEventListener('change', updatePrice);
-        });
+        document.getElementById('prix_unitaire').value = Math.round(prixSuggere);
+        updateTotal();
+        toggleEchangeTypeFields();
+    }
 
-        document.getElementById('id_type_ancien').addEventListener('change', updatePrice);
+    function updateTotal() {
+        const prix = parseFloat(document.getElementById('prix_unitaire').value) || 0;
+        const qte = parseInt(document.getElementById('quantite').value) || 0;
+        const total = prix * qte;
+        document.getElementById('montant_total_display').value = total.toLocaleString() + ' F';
+        document.getElementById('montant_total_hidden').value = total;
+    }
 
-        // Initialiser au chargement
-        document.addEventListener('DOMContentLoaded', updatePrice);
-    </script>
+    function toggleEchangeTypeFields() {
+        const typeValue = document.querySelector('input[name="type"]:checked').value;
+        const containerAncien = document.getElementById('container-ancien');
+        if (typeValue === 'echange_type') {
+            containerAncien.style.display = 'block';
+        } else {
+            containerAncien.style.display = 'none';
+        }
+    }
 
-    <style>
-        .btn-check:checked + .btn {
-            box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.15);
-        }
-        
-        .card {
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        
-        .card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
-        }
-    </style>
+    document.querySelectorAll('input[name="type"]').forEach(radio => {
+        radio.addEventListener('change', updatePrice);
+    });
+
+    document.getElementById('id_type_ancien').addEventListener('change', updatePrice);
+    document.addEventListener('DOMContentLoaded', updatePrice);
+</script>
+
+<style>
+    .fw-extrabold { font-weight: 800; }
+    .btn-check:checked + .btn-outline-navy {
+        background-color: var(--navy);
+        color: white;
+        box-shadow: 0 10px 15px -3px rgba(15, 23, 42, 0.2);
+    }
+    .form-control-lg { border-radius: 12px; }
+    .form-select-lg { border-radius: 12px; }
+</style>
 @endsection

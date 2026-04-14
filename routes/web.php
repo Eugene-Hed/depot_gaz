@@ -12,6 +12,15 @@ use App\Http\Controllers\FournisseurController;
 use App\Http\Controllers\RapportController;
 use App\Http\Controllers\Paiements\PaiementController;
 use App\Http\Controllers\Commandes\DetailCommandeController;
+use App\Http\Controllers\MouvementStockController;
+
+use App\Http\Controllers\ActivationController;
+
+// Routes d'activation (toujours accessibles mais protégées par le middleware de redirection interne)
+Route::middleware('web')->group(function () {
+    Route::get('/activate', [ActivationController::class, 'index'])->name('activation.index');
+    Route::post('/activate', [ActivationController::class, 'activate'])->name('activation.store');
+});
 
 // Routes publiques
 Route::middleware('guest')->group(function () {
@@ -32,6 +41,7 @@ Route::middleware('auth')->group(function () {
     // Stocks
     Route::prefix('stocks')->name('stocks.')->group(function () {
         Route::get('/', [StockController::class, 'index'])->name('index');
+        Route::get('/mouvements', [MouvementStockController::class, 'index'])->name('mouvements');
         Route::get('/create', [StockController::class, 'create'])->name('create');
         Route::post('/', [StockController::class, 'store'])->name('store');
         Route::get('/{stock}', [StockController::class, 'show'])->name('show');

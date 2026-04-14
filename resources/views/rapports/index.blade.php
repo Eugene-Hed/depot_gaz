@@ -1,75 +1,97 @@
 @extends('layouts.app')
 
+@section('title', 'Exportation de Rapports')
+
 @section('content')
-<div class="container-fluid">
-    <div class="row mb-4">
-        <div class="col">
-            <h1 class="d-flex align-items-center gap-3">
-                <i class="bi bi-file-earmark-arrow-down" style="font-size: 2rem; color: #6366f1;"></i>
-                <span>Exportation de Rapports</span>
-            </h1>
+<div class="container-fluid py-4 dashboard-corporate">
+    <!-- Header -->
+    <div class="row mb-5 align-items-center">
+        <div class="col-md-8">
+            <h1 class="h3 fw-bold text-navy mb-1 text-uppercase ls-wide">Centre de Rapports</h1>
+            <p class="text-secondary small mb-0">Analysez vos performances et exportez les registres consolidés</p>
+        </div>
+        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+            <div class="date-badge">
+                <i class="bi bi-clock-history me-2"></i>
+                <small>Données à jour</small>
+            </div>
         </div>
     </div>
 
-    <div class="row mb-4">
-        <div class="col-lg-3">
-            <div class="card border-0 shadow-sm bg-info-subtle">
-                <div class="card-body">
-                    <h5 class="card-title fw-bold">
-                        <i class="bi bi-info-circle"></i> À propos
-                    </h5>
-                    <p class="text-muted small mb-3">
-                        Exportez les données de votre système en différents formats pour analyse et archivage.
-                    </p>
-                    <hr class="my-3">
-                    <h6 class="fw-bold mb-2">Formats disponibles:</h6>
-                    <ul class="list-unstyled small text-muted">
-                        <li><i class="bi bi-file-earmark-spreadsheet"></i> <strong>CSV</strong> - Compatible Excel</li>
-                        <li><i class="bi bi-file-earmark-spreadsheet"></i> <strong>XLSX</strong> - Format Microsoft</li>
-                        <li><i class="bi bi-file-earmark-pdf"></i> <strong>PDF</strong> - Format universel</li>
-                    </ul>
+    <!-- Visual Summary (Quick Stats) -->
+    <div class="row g-4 mb-5">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                <div class="card-header bg-navy text-white p-4">
+                    <h6 class="mb-0 fw-bold text-uppercase ls-wide small">Répartition des Revenus par Type d'Opération</h6>
+                </div>
+                <div class="card-body p-4 bg-white">
+                    <div class="row g-4 align-items-center">
+                        <div class="col-lg-12">
+                            <div class="d-flex flex-wrap gap-4">
+                                @php
+                                    $types = [
+                                        'achat_simple' => ['label' => 'Achat Simple', 'color' => '#3b82f6'],
+                                        'echange_simple' => ['label' => 'Échange Standard', 'color' => '#10b981'],
+                                        'echange_type' => ['label' => 'Échange Spécifiant', 'color' => '#f59e0b'],
+                                        'achat_gros' => ['label' => 'Vente en Gros', 'color' => '#6366f1'],
+                                    ];
+                                @endphp
+
+                                @foreach($types as $key => $meta)
+                                    @if(isset($statsRevenus[$key]))
+                                        <div class="flex-grow-1 p-3 rounded-3 border bg-light-subtle shadow-hover" style="border-left: 4px solid {{ $meta['color'] }} !important;">
+                                            <small class="text-muted fw-bold text-uppercase font-2xs d-block mb-1">{{ $meta['label'] }}</small>
+                                            <h4 class="fw-bold text-navy mb-0">{{ number_format($statsRevenus[$key], 0, ',', ' ') }} <small class="text-muted small">F</small></h4>
+                                        </div>
+                                    @endif
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="col-lg-9">
-            <div class="row">
+    <!-- Export Grid -->
+    <div class="row g-4">
+        <div class="col-lg-12">
+            <h6 class="fw-bold text-navy mb-4 text-uppercase ls-wide small"><i class="bi bi-download me-2"></i> Documents Disponibles à l'Exportation</h6>
+            <div class="row g-4">
                 @foreach($rapports as $rapport)
-                    <div class="col-md-6 mb-4">
-                        <div class="card border-0 shadow-sm h-100 position-relative overflow-hidden" style="transition: all 0.3s ease;">
-                            <div class="card-body">
-                                <div class="d-flex gap-3 mb-3">
-                                    <div class="display-6 text-primary">
+                    <div class="col-xl-4 col-md-6">
+                        <div class="card border-0 shadow-sm h-100 rounded-4 ranking-item">
+                            <div class="card-body p-4">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="avatar-circle bg-light-navy text-navy me-3">
                                         <i class="bi {{ $rapport['icon'] }}"></i>
                                     </div>
-                                    <div class="flex-grow-1">
-                                        <h5 class="card-title fw-bold mb-0">{{ $rapport['nom'] }}</h5>
-                                        <small class="text-muted">{{ $rapport['count'] }} enregistrement(s)</small>
+                                    <div>
+                                        <h6 class="fw-bold text-navy mb-0">{{ $rapport['nom'] }}</h6>
+                                        <small class="text-muted font-2xs">{{ $rapport['count'] }} entrées au total</small>
                                     </div>
                                 </div>
-                                <p class="card-text text-muted small mb-3">
+                                <p class="text-secondary small mb-4" style="height: 40px; overflow: hidden;">
                                     {{ $rapport['description'] }}
                                 </p>
                                 
-                                <div class="btn-group w-100" role="group">
+                                <div class="d-flex gap-2">
                                     @foreach($rapport['formats'] as $format)
                                         @if($format === 'csv')
                                             <a href="{{ route('rapports.export', ['type' => $rapport['id'], 'format' => 'csv']) }}" 
-                                               class="btn btn-outline-primary btn-sm" 
-                                               title="Télécharger en CSV">
-                                                <i class="bi bi-download"></i> CSV
+                                               class="btn btn-sm btn-outline-navy flex-grow-1 rounded-pill fw-bold">
+                                                <i class="bi bi-filetype-csv me-1"></i> CSV
                                             </a>
                                         @elseif($format === 'xlsx')
                                             <a href="{{ route('rapports.export', ['type' => $rapport['id'], 'format' => 'xlsx']) }}" 
-                                               class="btn btn-outline-success btn-sm"
-                                               title="Télécharger en XLSX">
-                                                <i class="bi bi-download"></i> XLSX
+                                               class="btn btn-sm btn-outline-navy flex-grow-1 rounded-pill fw-bold">
+                                                <i class="bi bi-filetype-xlsx me-1"></i> EXCEL
                                             </a>
                                         @elseif($format === 'pdf')
                                             <a href="{{ route('rapports.export-pdf', ['type' => $rapport['id']]) }}" 
-                                               class="btn btn-outline-danger btn-sm"
-                                               title="Télécharger en PDF">
-                                                <i class="bi bi-download"></i> PDF
+                                               class="btn btn-sm btn-outline-navy flex-grow-1 rounded-pill fw-bold">
+                                                <i class="bi bi-filetype-pdf me-1"></i> PDF
                                             </a>
                                         @endif
                                     @endforeach
@@ -81,55 +103,60 @@
             </div>
         </div>
     </div>
-
-    <!-- Infos pratiques -->
-    <div class="row mt-5">
-        <div class="col">
-            <div class="card border-0 shadow-sm bg-light">
-                <div class="card-body">
-                    <h5 class="card-title fw-bold mb-3">
-                        <i class="bi bi-lightbulb"></i> Conseils d'utilisation
-                    </h5>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <strong class="text-primary">Format CSV</strong>
-                                <p class="text-muted small mb-0">Universel, compatible avec tous les tableurs. Idéal pour l'archivage.</p>
-                            </div>
-                            <div class="mb-3">
-                                <strong class="text-success">Format XLSX</strong>
-                                <p class="text-muted small mb-0">Microsoft Excel natif. Parfait pour les analyses détaillées.</p>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <strong class="text-danger">Format PDF</strong>
-                                <p class="text-muted small mb-0">Lisible sur tout appareil. Idéal pour imprimer ou partager.</p>
-                            </div>
-                            <div class="mb-3">
-                                <strong class="text-info">Formatage</strong>
-                                <p class="text-muted small mb-0">Les dates et montants sont automatiquement formatés selon la locale.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 
 <style>
-    .card {
-        border-radius: 0.5rem;
+    :root {
+        --navy: #0f172a;
+        --light-navy: rgba(15, 23, 42, 0.05);
     }
+    .text-navy { color: var(--navy); }
+    .bg-navy { background-color: var(--navy) !important; color: white; }
+    .ls-wide { letter-spacing: 2px; }
+    .font-2xs { font-size: 0.65rem; }
+    .italic { font-style: italic; }
     
-    .card:hover {
-        box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.15) !important;
+    .dashboard-corporate {
+        background-color: #f8fafc;
+        min-height: 100vh;
+    }
+
+    .date-badge {
+        background: white;
+        padding: 8px 15px;
+        border-radius: 50px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        display: inline-flex;
+        align-items: center;
+        color: #64748b;
+    }
+
+    .avatar-circle {
+        width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;
+    }
+
+    .shadow-hover {
+        transition: all 0.2s ease;
+    }
+    .shadow-hover:hover {
         transform: translateY(-2px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1) !important;
+        background-color: white !important;
     }
-    
-    .display-6 {
-        line-height: 1;
+
+    .ranking-item {
+        transition: transform 0.2s;
+    }
+    .ranking-item:hover { transform: translateY(-5px); }
+
+    .btn-outline-navy {
+        border: 1px solid var(--navy);
+        color: var(--navy);
+        font-size: 0.75rem;
+    }
+    .btn-outline-navy:hover {
+        background-color: var(--navy);
+        color: white;
     }
 </style>
 @endsection

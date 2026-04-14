@@ -1,140 +1,121 @@
 @extends('layouts.app')
 
-@section('title', 'Créer un client')
+@section('title', 'Nouveau Client')
 
 @section('content')
-    <div class="row mb-4">
-        <div class="col-md-8">
-            <h1><i class="bi bi-person-plus"></i> Nouveau client</h1>
-        </div>
-        <div class="col-md-4 text-end">
-            <a href="{{ route('clients.index') }}" class="btn btn-secondary">
-                <i class="bi bi-arrow-left"></i> Retour
-            </a>
-        </div>
+<div class="row mb-5 align-items-end">
+    <div class="col-md-8">
+        <h1 class="h3 fw-bold text-navy mb-1 text-uppercase ls-wide">Inscrire un Client</h1>
+        <p class="text-secondary small mb-0">Création d'une fiche client pour le suivi de fidélité</p>
     </div>
+    <div class="col-md-4 text-md-end mt-3 mt-md-0">
+        <a href="{{ route('clients.index') }}" class="btn btn-light btn-sm border rounded-pill px-3 fw-bold">
+            <i class="bi bi-arrow-left me-1"></i> Retour à la liste
+        </a>
+    </div>
+</div>
 
-    <div class="row">
-        <div class="col-md-8">
-            <div class="card shadow-sm">
-                <div class="card-header bg-light">
-                    <h5 class="mb-0"><i class="bi bi-form-check"></i> Formulaire du client</h5>
-                </div>
-                <div class="card-body">
-                    <form action="{{ route('clients.store') }}" method="POST">
-                        @csrf
+<div class="row g-4">
+    <div class="col-lg-8">
+        <div class="card card-corporate border-0 shadow-sm">
+            <div class="card-header bg-navy text-white p-4">
+                <h6 class="mb-0 fw-bold text-uppercase ls-wide small"><i class="bi bi-person-plus me-2"></i> Informations Client</h6>
+            </div>
+            <div class="card-body p-4">
+                <form action="{{ route('clients.store') }}" method="POST">
+                    @csrf
 
+                    <div class="row g-4">
                         <!-- Nom -->
-                        <div class="mb-4">
-                            <label for="nom" class="form-label fw-bold">
-                                <i class="bi bi-person"></i> Nom complet *
-                            </label>
-                            <input type="text" class="form-control form-control-lg @error('nom') is-invalid @enderror" 
+                        <div class="col-md-12">
+                            <label for="nom" class="small text-muted fw-bold text-uppercase mb-2 d-block">Nom Complet *</label>
+                            <input type="text" class="form-control form-control-lg fw-bold text-navy @error('nom') is-invalid @enderror" 
                                 id="nom" name="nom" value="{{ old('nom') }}" 
-                                placeholder="ex: Jean Dupont" required>
+                                placeholder="Ex: M. Amadou Diallo" required>
                             @error('nom')
                                 <span class="invalid-feedback">{{ $message }}</span>
                             @enderror
                         </div>
 
                         <!-- Téléphone -->
-                        <div class="mb-4">
-                            <label for="telephone" class="form-label fw-bold">
-                                <i class="bi bi-telephone"></i> Téléphone *
-                            </label>
-                            <input type="tel" class="form-control form-control-lg @error('telephone') is-invalid @enderror" 
-                                id="telephone" name="telephone" value="{{ old('telephone') }}" 
-                                placeholder="ex: +221 77 123 45 67" required>
+                        <div class="col-md-6">
+                            <label for="telephone" class="small text-muted fw-bold text-uppercase mb-2 d-block">Numéro de Téléphone *</label>
+                            <div class="input-group input-group-lg">
+                                <span class="input-group-text bg-light border-end-0"><i class="bi bi-telephone"></i></span>
+                                <input type="tel" class="form-control fw-bold text-navy border-start-0 @error('telephone') is-invalid @enderror" 
+                                    id="telephone" name="telephone" value="{{ old('telephone') }}" 
+                                    placeholder="Ex: 6XX XX XX XX" required>
+                            </div>
                             @error('telephone')
-                                <span class="invalid-feedback">{{ $message }}</span>
+                                <span class="invalid-feedback d-block">{{ $message }}</span>
                             @enderror
-                            <small class="text-muted d-block mt-2">Le numéro de téléphone doit être unique</small>
                         </div>
 
                         <!-- Email -->
-                        <div class="mb-4">
-                            <label for="email" class="form-label fw-bold">
-                                <i class="bi bi-envelope"></i> Email (optionnel)
-                            </label>
-                            <input type="email" class="form-control form-control-lg @error('email') is-invalid @enderror" 
-                                id="email" name="email" value="{{ old('email') }}" 
-                                placeholder="ex: jean.dupont@email.com">
+                        <div class="col-md-6">
+                            <label for="email" class="small text-muted fw-bold text-uppercase mb-2 d-block">Adresse Email</label>
+                            <div class="input-group input-group-lg">
+                                <span class="input-group-text bg-light border-end-0"><i class="bi bi-envelope"></i></span>
+                                <input type="email" class="form-control fw-bold text-navy border-start-0 @error('email') is-invalid @enderror" 
+                                    id="email" name="email" value="{{ old('email') }}" 
+                                    placeholder="client@domaine.com">
+                            </div>
                             @error('email')
-                                <span class="invalid-feedback">{{ $message }}</span>
+                                <span class="invalid-feedback d-block">{{ $message }}</span>
                             @enderror
                         </div>
 
                         <!-- Adresse -->
-                        <div class="mb-4">
-                            <label for="adresse" class="form-label fw-bold">
-                                <i class="bi bi-geo-alt"></i> Adresse (optionnel)
-                            </label>
-                            <textarea class="form-control form-control-lg @error('adresse') is-invalid @enderror" 
+                        <div class="col-md-12">
+                            <label for="adresse" class="small text-muted fw-bold text-uppercase mb-2 d-block">Adresse Géographique</label>
+                            <textarea class="form-control fw-medium @error('adresse') is-invalid @enderror" 
                                 id="adresse" name="adresse" rows="3" 
-                                placeholder="ex: 123 Rue de la Paix, Dakar">{{ old('adresse') }}</textarea>
+                                placeholder="Ex: Quartier Akwa, Rue 123...">{{ old('adresse') }}</textarea>
                             @error('adresse')
                                 <span class="invalid-feedback">{{ $message }}</span>
                             @enderror
                         </div>
-
-                        <!-- Boutons -->
-                        <div class="d-flex gap-2">
-                            <button type="submit" class="btn btn-success btn-lg">
-                                <i class="bi bi-check-circle"></i> Créer le client
-                            </button>
-                            <a href="{{ route('clients.index') }}" class="btn btn-secondary btn-lg">
-                                <i class="bi bi-x-circle"></i> Annuler
-                            </a>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <!-- Panel informatif -->
-        <div class="col-md-4">
-            <div class="card shadow-sm bg-light">
-                <div class="card-header bg-info text-white">
-                    <h5 class="mb-0"><i class="bi bi-info-circle"></i> Informations</h5>
-                </div>
-                <div class="card-body">
-                    <div class="mb-4">
-                        <p class="mb-2"><strong>Champs obligatoires :</strong></p>
-                        <ul class="small text-muted mb-0">
-                            <li>Nom complet</li>
-                            <li>Téléphone (unique)</li>
-                        </ul>
                     </div>
 
-                    <hr>
-
-                    <div class="mb-4">
-                        <p class="mb-2"><strong>Champs optionnels :</strong></p>
-                        <ul class="small text-muted mb-0">
-                            <li>Email</li>
-                            <li>Adresse</li>
-                        </ul>
+                    <div class="d-flex gap-3 border-top pt-4 mt-5">
+                        <button type="submit" class="btn btn-navy rounded-pill px-5 fw-bold">
+                            Enregistrer le Client
+                        </button>
+                        <a href="{{ route('clients.index') }}" class="btn btn-light rounded-pill px-4 border small fw-bold">
+                            Annuler
+                        </a>
                     </div>
-
-                    <hr>
-
-                    <div class="alert alert-info">
-                        <i class="bi bi-lightbulb"></i>
-                        <strong>Conseil :</strong> Assurez-vous que le numéro de téléphone est correct, car il servira d'identifiant unique du client.
-                    </div>
-                </div>
+                </form>
             </div>
         </div>
     </div>
 
-    <style>
-        .card {
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        
-        .card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
-        }
-    </style>
+    <div class="col-lg-4">
+        <div class="card card-corporate border-0 shadow-sm bg-light h-100">
+            <div class="card-body p-4">
+                <h6 class="fw-bold text-navy text-uppercase ls-wide small mb-4">Directives</h6>
+                
+                <div class="alert alert-info border-0 shadow-none bg-white p-3 rounded-4 mb-4">
+                    <i class="bi bi-info-circle-fill me-2"></i>
+                    <small>Le numéro de téléphone sert d'identifiant unique pour la fidélité.</small>
+                </div>
+
+                <div class="small text-secondary">
+                    <p class="mb-3"><strong>Champs obligatoires :</strong></p>
+                    <ul class="ps-3 mb-4">
+                        <li class="mb-2">Le nom complet pour la facturation.</li>
+                        <li>Un numéro de téléphone valide.</li>
+                    </ul>
+                    
+                    <p class="mb-3"><strong>Avantages :</strong></p>
+                    <ul class="ps-3 mb-0">
+                        <li class="mb-2">Calcul automatique des points.</li>
+                        <li>Historique des transactions dédié.</li>
+                        <li>Possibilité de crédits autorisés.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection

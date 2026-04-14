@@ -26,7 +26,12 @@ class TransactionController extends Controller
     {
         $types = TypeBouteille::with(['marque', 'stock'])->get();
         $clients = Client::get();
-        return view('transactions.create', compact('types', 'clients'));
+        $recentTransactions = Transaction::with(['client', 'typeBouteille'])
+            ->latest()
+            ->take(5)
+            ->get();
+            
+        return view('transactions.create', compact('types', 'clients', 'recentTransactions'));
     }
 
     public function store(Request $request)
