@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class TypeBouteille extends Model
 {
     protected $table = 'types_bouteilles';
-    protected $fillable = ['taille', 'marque_id', 'prix_vente', 'prix_consigne', 'prix_recharge', 'seuil_alerte', 'image', 'statut'];
+    protected $fillable = ['nom', 'taille', 'marque_id', 'prix_vente', 'prix_consigne', 'prix_recharge', 'seuil_alerte', 'image', 'statut'];
     protected $casts = [
         'prix_vente' => 'decimal:2',
         'prix_consigne' => 'decimal:2',

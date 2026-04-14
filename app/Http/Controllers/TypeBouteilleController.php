@@ -50,18 +50,23 @@ class TypeBouteilleController extends Controller
         $validated = $request->validate([
             'taille' => 'required|string|max:100',
             'id_marque' => 'required|exists:marques,id',
-            'prix_vente' => 'required|numeric|min:0',
+            'prix_consigne' => 'required|numeric|min:0',
             'prix_recharge' => 'required|numeric|min:0',
             'seuil_alerte' => 'required|integer|min:0',
             'statut' => 'required|in:actif,inactif',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'nullable|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
         
         \Log::info('Validation OK');
 
         try {
+            $marque = Marque::findOrFail($validated['id_marque']);
+            $validated['nom'] = $marque->nom . ' ' . $validated['taille'] . 'kg';
             $validated['marque_id'] = $validated['id_marque'];
             unset($validated['id_marque']);
+
+            // Prix bouteille pleine = Consigne (fer) + Recharge (gaz)
+            $validated['prix_vente'] = $validated['prix_consigne'] + $validated['prix_recharge'];
 
             // Upload de l'image si présente
             if ($request->hasFile('image')) {
@@ -130,16 +135,21 @@ class TypeBouteilleController extends Controller
         $validated = $request->validate([
             'taille' => 'required|string|max:100',
             'id_marque' => 'required|exists:marques,id',
-            'prix_vente' => 'required|numeric|min:0',
+            'prix_consigne' => 'required|numeric|min:0',
             'prix_recharge' => 'required|numeric|min:0',
             'seuil_alerte' => 'required|integer|min:0',
             'statut' => 'required|in:actif,inactif',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'nullable|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         try {
+            $marque = Marque::findOrFail($validated['id_marque']);
+            $validated['nom'] = $marque->nom . ' ' . $validated['taille'] . 'kg';
             $validated['marque_id'] = $validated['id_marque'];
             unset($validated['id_marque']);
+
+            // Prix bouteille pleine = Consigne (fer) + Recharge (gaz)
+            $validated['prix_vente'] = $validated['prix_consigne'] + $validated['prix_recharge'];
 
             // Retirer le champ image des données validées pour éviter d'écraser l'ancienne
             unset($validated['image']);

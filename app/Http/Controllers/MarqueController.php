@@ -32,7 +32,7 @@ class MarqueController extends Controller
         $validated = $request->validate([
             'nom' => 'required|string|max:255|unique:marques',
             'statut' => 'required|in:actif,inactif',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'nullable|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
         try {
@@ -72,7 +72,7 @@ class MarqueController extends Controller
         $validated = $request->validate([
             'nom' => 'required|string|max:255|unique:marques,nom,' . $marque->id,
             'statut' => 'required|in:actif,inactif',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'nullable|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
         try {

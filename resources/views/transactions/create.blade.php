@@ -54,13 +54,7 @@
                                     </label>
                                 </div>
 
-                                <div class="col-md-6 mt-2">
-                                    <input type="radio" class="btn-check" name="type" id="type_echange_differe" 
-                                        value="echange_differe" {{ old('type') == 'echange_differe' ? 'checked' : '' }}>
-                                    <label class="btn btn-outline-info w-100" for="type_echange_differe">
-                                        <i class="bi bi-hourglass-split"></i> Échange différé
-                                    </label>
-                                </div>
+
                             </div>
                             @error('type')
                                 <span class="invalid-feedback d-block">{{ $message }}</span>
@@ -98,33 +92,42 @@
                                     @foreach($types as $type)
                                         <option value="{{ $type->id }}" 
                                             data-prix="{{ $type->prix_vente ?? 0 }}"
+                                            data-consigne="{{ $type->prix_consigne ?? 0 }}"
+                                            data-recharge="{{ $type->prix_recharge ?? 0 }}"
                                             data-stock="{{ $type->stock->quantite_pleine ?? 0 }}"
                                             {{ old('id_type_bouteille') == $type->id ? 'selected' : '' }}>
-                                            {{ $type->marque->nom }} - {{ $type->nom }} ({{ $type->taille }}L)
+                                            {{ $type->marque->nom }} - {{ $type->nom }} ({{ $type->taille }}kg)
                                         </option>
                                     @endforeach
                                 </select>
                                 @error('id_type_bouteille')
                                     <span class="invalid-feedback">{{ $message }}</span>
                                 @enderror
-                                <small class="text-muted d-block mt-2">
-                                    Stock disponible: <span id="stock-info" class="badge bg-info">0</span>
-                                </small>
+                                <div class="d-flex justify-content-between mt-2">
+                                    <small class="text-muted">Stock: <span id="stock-info" class="badge bg-info">0</span></small>
+                                    <small class="text-muted">Consigne: <span id="consigne-info" class="badge bg-secondary">0 F</span></small>
+                                    <small class="text-muted">Recharge: <span id="recharge-info" class="badge bg-secondary">0 F</span></small>
+                                </div>
                             </div>
 
-                            <div class="col-md-6">
-                                <label for="id_type_ancien" class="form-label fw-bold" id="label-ancien" style="display: none;">
-                                    <i class="bi bi-box"></i> Produit ancien (échange type)
+                            <div class="col-md-6" id="container-ancien" style="display: none;">
+                                <label for="id_type_ancien" class="form-label fw-bold">
+                                    <i class="bi bi-box-arrow-in-left"></i> Bouteille vide retournée (Entrée) *
                                 </label>
                                 <select class="form-select form-select-lg" 
-                                    id="id_type_ancien" name="id_type_ancien" style="display: none;">
-                                    <option value="">-- Sélectionner un produit --</option>
+                                    id="id_type_ancien" name="id_type_ancien" onchange="updatePrice()">
+                                    <option value="">-- Sélectionner le modèle retourné --</option>
                                     @foreach($types as $type)
-                                        <option value="{{ $type->id }}" {{ old('id_type_ancien') == $type->id ? 'selected' : '' }}>
-                                            {{ $type->marque->nom }} - {{ $type->nom }} ({{ $type->taille }}L)
+                                        <option value="{{ $type->id }}" 
+                                            data-consigne="{{ $type->prix_consigne ?? 0 }}"
+                                            {{ old('id_type_ancien') == $type->id ? 'selected' : '' }}>
+                                            {{ $type->marque->nom }} - {{ $type->nom }} ({{ $type->taille }}kg)
                                         </option>
                                     @endforeach
                                 </select>
+                                <div class="mt-2">
+                                    <small class="text-muted">Valeur Consigne: <span id="consigne-ancien-info" class="badge bg-secondary">0 F</span></small>
+                                </div>
                             </div>
                         </div>
 
@@ -153,7 +156,8 @@
                                     <span class="invalid-feedback">{{ $message }}</span>
                                 @enderror
                                 <small class="text-muted d-block mt-2">
-                                    Prix catalogue: <span id="prix-info" class="badge bg-secondary">0 F</span>
+                                    Prix suggéré: <span id="prix-info" class="badge bg-secondary">0 F</span>
+                                    <span class="badge bg-light text-dark border"><i class="bi bi-pencil"></i> Modifiable</span>
                                 </small>
                             </div>
 
@@ -256,14 +260,7 @@
 
                     <hr>
 
-                    <div>
-                        <p class="mb-2">
-                            <span class="badge bg-info">Échange différé</span>
-                        </p>
-                        <p class="small text-muted">
-                            Client retourne une vide d'un type, reçoit une pleine d'un autre type, mais s'engage à retourner la pleine du type initial lors du prochain achat.
-                        </p>
-                    </div>
+
 
                     <hr class="my-3">
 
@@ -280,11 +277,57 @@
         function updatePrice() {
             const select = document.getElementById('id_type_bouteille');
             const option = select.options[select.selectedIndex];
-            const prix = option.dataset.prix || 0;
+            if (!option.value) return;
+
+            const prixPleine = parseFloat(option.dataset.prix) || 0;
+            const consigne = parseFloat(option.dataset.consigne) || 0;
+            const recharge = parseFloat(option.dataset.recharge) || 0;
             const stock = option.dataset.stock || 0;
             
-            document.getElementById('prix-info').textContent = prix + ' F';
             document.getElementById('stock-info').textContent = stock;
+            document.getElementById('consigne-info').textContent = consigne.toLocaleString() + ' F';
+            document.getElementById('recharge-info').textContent = recharge.toLocaleString() + ' F';
+            document.getElementById('prix-info').textContent = prixPleine.toLocaleString() + ' F';
+
+            // Mise à jour infos bouteille ancienne (si présente)
+            const selectAncien = document.getElementById('id_type_ancien');
+            const consigneAncienInfo = document.getElementById('consigne-ancien-info');
+            if (selectAncien.options[selectAncien.selectedIndex]) {
+                const optionAncien = selectAncien.options[selectAncien.selectedIndex];
+                const consigneAncien = parseFloat(optionAncien.dataset.consigne) || 0;
+                consigneAncienInfo.textContent = optionAncien.value ? consigneAncien.toLocaleString() + ' F' : '0 F';
+            }
+
+            // Automatisation du prix unitaire selon le type
+            const typeTransaction = document.querySelector('input[name="type"]:checked').value;
+            let prixSuggere = 0;
+
+            const containerNouveau = document.getElementById('id_type_bouteille').closest('.col-md-6') || document.getElementById('id_type_bouteille').closest('.col-md-12');
+
+            if (typeTransaction === 'achat_simple' || typeTransaction === 'echange_simple') {
+                prixSuggere = (typeTransaction === 'achat_simple') ? prixPleine : recharge;
+                if (containerNouveau) {
+                    containerNouveau.classList.remove('col-md-6');
+                    containerNouveau.classList.add('col-md-12');
+                }
+            } else if (typeTransaction === 'echange_type') {
+                prixSuggere = recharge;
+                if (containerNouveau) {
+                    containerNouveau.classList.remove('col-md-12');
+                    containerNouveau.classList.add('col-md-6');
+                }
+                
+                const optionAncien = selectAncien.options[selectAncien.selectedIndex];
+                if (optionAncien && optionAncien.value) {
+                    const consigneAncien = parseFloat(optionAncien.dataset.consigne) || 0;
+                    const diff = consigne - consigneAncien;
+                    if (diff > 0) {
+                        prixSuggere += diff;
+                    }
+                }
+            }
+
+            document.getElementById('prix_unitaire').value = prixSuggere;
             
             updateTotal();
             toggleEchangeTypeFields();
@@ -298,26 +341,28 @@
         }
 
         function toggleEchangeTypeFields() {
-            const type = document.querySelector('input[name="type"]:checked').value;
-            const labelAncien = document.getElementById('label-ancien');
+            const typeValue = document.querySelector('input[name="type"]:checked').value;
+            const containerAncien = document.getElementById('container-ancien');
             const selectAncien = document.getElementById('id_type_ancien');
 
-            if (type === 'echange_type' || type === 'echange_differe') {
-                labelAncien.style.display = 'block';
-                selectAncien.style.display = 'block';
+            if (typeValue === 'echange_type') {
+                containerAncien.style.display = 'block';
+                selectAncien.setAttribute('required', 'required');
             } else {
-                labelAncien.style.display = 'none';
-                selectAncien.style.display = 'none';
+                containerAncien.style.display = 'none';
+                selectAncien.removeAttribute('required');
             }
         }
 
-        // Ajouter les listeners pour les radios
+        // Écouter les changements sur tout ce qui impacte le prix
         document.querySelectorAll('input[name="type"]').forEach(radio => {
-            radio.addEventListener('change', toggleEchangeTypeFields);
+            radio.addEventListener('change', updatePrice);
         });
 
+        document.getElementById('id_type_ancien').addEventListener('change', updatePrice);
+
         // Initialiser au chargement
-        updatePrice();
+        document.addEventListener('DOMContentLoaded', updatePrice);
     </script>
 
     <style>

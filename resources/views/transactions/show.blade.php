@@ -31,9 +31,6 @@
                             @case('achat_simple')
                                 <span class="badge bg-primary"><i class="bi bi-bag-plus"></i> Achat simple</span>
                                 @break
-                            @case('echange_differe')
-                                <span class="badge bg-info"><i class="bi bi-hourglass-split"></i> Échange différé</span>
-                                @break
                         @endswitch
                     </div>
                 </div>

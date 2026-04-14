@@ -152,13 +152,22 @@ class StockController extends Controller
                 'quantite_vide' => $validated['quantite_vide'],
             ]);
 
+            $motifs = [];
+            if ($diffPleine != 0) {
+                $motifs[] = $diffPleine > 0 ? "Ajout de $diffPleine pleines" : "Retrait de " . abs($diffPleine) . " pleines";
+            }
+            if ($diffVide != 0) {
+                $motifs[] = $diffVide > 0 ? "Ajout de $diffVide vides" : "Retrait de " . abs($diffVide) . " vides";
+            }
+            $motifStr = empty($motifs) ? 'Ajustement sans modification' : implode(', ', $motifs);
+
             // Enregistrer comme ajustement
             MouvementStock::create([
                 'stock_id' => $stock->id,
                 'type_mouvement' => 'ajustement',
                 'quantite_pleine' => abs($diffPleine),
                 'quantite_vide' => abs($diffVide),
-                'motif' => $diffPleine < 0 ? 'diminution' : 'augmentation',
+                'motif' => $motifStr,
                 'commentaire' => $validated['commentaire'] ?? 'Ajustement manuel',
                 'administrateur_id' => Auth::id(),
             ]);

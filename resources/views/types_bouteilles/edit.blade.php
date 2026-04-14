@@ -96,30 +96,49 @@
                             </div>
                         </div>
 
-                        <!-- Prices Row -->
+                        <!-- Prix -->
                         <div class="row g-3 mb-4">
                             <div class="col-md-6">
-                                <label for="prix_vente" class="form-label fw-bold">
-                                    <i class="bi bi-tag"></i> Prix vente (FCFA)
+                                <label for="prix_consigne" class="form-label fw-bold">
+                                    <i class="bi bi-shield-check"></i> Prix Consigne / Bouteille Vide (FCFA)
                                 </label>
-                                <input type="number" class="form-control form-control-lg @error('prix_vente') is-invalid @enderror" 
-                                       id="prix_vente" name="prix_vente" placeholder="0" step="100"
-                                       value="{{ old('prix_vente', $typeBouteille->prix_vente) }}" required>
-                                @error('prix_vente')
+                                <input type="number" class="form-control form-control-lg @error('prix_consigne') is-invalid @enderror" 
+                                       id="prix_consigne" name="prix_consigne" placeholder="0" step="1"
+                                       value="{{ old('prix_consigne', $typeBouteille->prix_consigne) }}" required 
+                                       onchange="calculerPrixPleine()" oninput="calculerPrixPleine()">
+                                @error('prix_consigne')
                                     <div class="invalid-feedback d-block">{{ $message }}</div>
                                 @enderror
+                                <small class="text-muted d-block mt-2">Prix d'achat du fer (bouteille vide)</small>
                             </div>
 
                             <div class="col-md-6">
                                 <label for="prix_recharge" class="form-label fw-bold">
-                                    <i class="bi bi-lightning-charge"></i> Prix recharge (FCFA)
+                                    <i class="bi bi-lightning-charge"></i> Prix Recharge (FCFA)
                                 </label>
                                 <input type="number" class="form-control form-control-lg @error('prix_recharge') is-invalid @enderror" 
-                                       id="prix_recharge" name="prix_recharge" placeholder="0" step="100"
-                                       value="{{ old('prix_recharge', $typeBouteille->prix_recharge) }}" required>
+                                       id="prix_recharge" name="prix_recharge" placeholder="0" step="1"
+                                       value="{{ old('prix_recharge', $typeBouteille->prix_recharge) }}" required
+                                       onchange="calculerPrixPleine()" oninput="calculerPrixPleine()">
                                 @error('prix_recharge')
                                     <div class="invalid-feedback d-block">{{ $message }}</div>
                                 @enderror
+                                <small class="text-muted d-block mt-2">Échange vide contre pleine (même type)</small>
+                            </div>
+                        </div>
+
+                        <!-- Prix Bouteille Pleine (auto-calculé) -->
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <label for="prix_pleine_display" class="form-label fw-bold">
+                                    <i class="bi bi-tag-fill"></i> Prix Bouteille Pleine (FCFA)
+                                </label>
+                                <input type="text" class="form-control form-control-lg bg-light fw-bold text-success" 
+                                       id="prix_pleine_display" readonly 
+                                       value="{{ number_format($typeBouteille->prix_consigne + $typeBouteille->prix_recharge, 0, ',', ' ') }} FCFA">
+                                <small class="text-muted d-block mt-2">
+                                    <i class="bi bi-calculator"></i> Calculé automatiquement : Consigne + Recharge
+                                </small>
                             </div>
                         </div>
 
@@ -270,6 +289,17 @@
     function deleteType() {
         document.getElementById('deleteForm').submit();
     }
+
+    // Calcul automatique du prix bouteille pleine
+    function calculerPrixPleine() {
+        const consigne = parseFloat(document.getElementById('prix_consigne').value) || 0;
+        const recharge = parseFloat(document.getElementById('prix_recharge').value) || 0;
+        const total = consigne + recharge;
+        document.getElementById('prix_pleine_display').value = total.toLocaleString('fr-FR') + ' FCFA';
+    }
+
+    // Calculer au chargement de la page
+    document.addEventListener('DOMContentLoaded', calculerPrixPleine);
 
     // Aperçu de l'image
     document.getElementById('image').addEventListener('change', function(e) {

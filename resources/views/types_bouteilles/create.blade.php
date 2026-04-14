@@ -102,29 +102,43 @@
                         <!-- Prix -->
                         <div class="row mb-4">
                             <div class="col-md-6">
-                                <label for="prix_vente" class="form-label fw-bold">
-                                    <i class="bi bi-tag"></i> Prix vente bouteille pleine (FCFA) *
+                                <label for="prix_consigne" class="form-label fw-bold">
+                                    <i class="bi bi-shield-check"></i> Prix Consigne / Bouteille Vide (FCFA) *
                                 </label>
-                                <input type="number" class="form-control form-control-lg @error('prix_vente') is-invalid @enderror" 
-                                       id="prix_vente" name="prix_vente" placeholder="0" step="100"
-                                       value="{{ old('prix_vente') }}" required>
-                                @error('prix_vente')
+                                <input type="number" class="form-control form-control-lg @error('prix_consigne') is-invalid @enderror" 
+                                       id="prix_consigne" name="prix_consigne" placeholder="0" step="1"
+                                       value="{{ old('prix_consigne') }}" required onchange="calculerPrixPleine()" oninput="calculerPrixPleine()">
+                                @error('prix_consigne')
                                     <span class="invalid-feedback">{{ $message }}</span>
                                 @enderror
-                                <small class="text-muted d-block mt-2">Prix de vente au client</small>
+                                <small class="text-muted d-block mt-2">Prix d'achat du fer (bouteille vide)</small>
                             </div>
 
                             <div class="col-md-6">
                                 <label for="prix_recharge" class="form-label fw-bold">
-                                    <i class="bi bi-lightning-charge"></i> Prix recharge (FCFA) *
+                                    <i class="bi bi-lightning-charge"></i> Prix Recharge (FCFA) *
                                 </label>
                                 <input type="number" class="form-control form-control-lg @error('prix_recharge') is-invalid @enderror" 
-                                       id="prix_recharge" name="prix_recharge" placeholder="0" step="100"
-                                       value="{{ old('prix_recharge') }}" required>
+                                       id="prix_recharge" name="prix_recharge" placeholder="0" step="1"
+                                       value="{{ old('prix_recharge') }}" required onchange="calculerPrixPleine()" oninput="calculerPrixPleine()">
                                 @error('prix_recharge')
                                     <span class="invalid-feedback">{{ $message }}</span>
                                 @enderror
-                                <small class="text-muted d-block mt-2">Vide contre pleine (même type)</small>
+                                <small class="text-muted d-block mt-2">Échange vide contre pleine (même type)</small>
+                            </div>
+                        </div>
+
+                        <!-- Prix Bouteille Pleine (auto-calculé) -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label for="prix_pleine_display" class="form-label fw-bold">
+                                    <i class="bi bi-tag-fill"></i> Prix Bouteille Pleine (FCFA)
+                                </label>
+                                <input type="text" class="form-control form-control-lg bg-light fw-bold text-success" 
+                                       id="prix_pleine_display" readonly value="0 FCFA">
+                                <small class="text-muted d-block mt-2">
+                                    <i class="bi bi-calculator"></i> Calculé automatiquement : Consigne + Recharge
+                                </small>
                             </div>
                         </div>
 
@@ -151,6 +165,12 @@
                             </div>
                         </div>
 
+                        @error('error')
+                            <div class="alert alert-danger mb-4" role="alert">
+                                <i class="bi bi-exclamation-circle"></i> {{ $message }}
+                            </div>
+                        @enderror
+
                         <!-- Boutons -->
                         <div class="d-flex gap-2">
                             <button type="submit" class="btn btn-primary btn-lg">
@@ -173,18 +193,18 @@
                 </div>
                 <div class="card-body">
                     <div class="mb-4">
-                        <p class="mb-2"><strong class="text-primary">Prix vente</strong></p>
-                        <p class="small text-muted">Prix de vente de la bouteille pleine au client</p>
+                        <p class="mb-2"><strong class="text-primary">Prix Consigne</strong></p>
+                        <p class="small text-muted">Prix d'achat de la bouteille vide (le fer). C'est la caution que le client paie pour le corps de la bouteille.</p>
                         <div class="alert alert-light small mt-2">
-                            Ex: 5 000 FCFA pour une bouteille de gaz
+                            Ex: 10 000 FCFA pour un fer de 12.5kg
                         </div>
                     </div>
 
                     <hr>
 
                     <div class="mb-4">
-                        <p class="mb-2"><strong class="text-warning">Prix recharge</strong></p>
-                        <p class="small text-muted">Coût pour échanger une bouteille vide contre une bouteille pleine du même type</p>
+                        <p class="mb-2"><strong class="text-warning">Prix Recharge</strong></p>
+                        <p class="small text-muted">Prix pour remplir une bouteille vide. Le client échange sa bouteille vide contre une pleine du même type.</p>
                         <div class="alert alert-light small mt-2">
                             Ex: 3 500 FCFA pour recharger
                         </div>
@@ -192,9 +212,10 @@
 
                     <hr>
 
-                    <div class="alert alert-info small">
-                        <i class="bi bi-lightbulb"></i>
-                        <strong>Note:</strong> La différence entre prix vente et prix recharge représente la marge pour l'équipement initial.
+                    <div class="alert alert-success small">
+                        <i class="bi bi-calculator"></i>
+                        <strong>Prix Bouteille Pleine</strong> = Consigne + Recharge<br>
+                        <span class="text-muted">Calculé automatiquement. C'est le prix qu'un client sans bouteille paie pour repartir avec une bouteille pleine.</span>
                     </div>
                 </div>
             </div>
@@ -213,6 +234,17 @@
     </style>
 
     <script>
+        // Calcul automatique du prix bouteille pleine
+        function calculerPrixPleine() {
+            const consigne = parseFloat(document.getElementById('prix_consigne').value) || 0;
+            const recharge = parseFloat(document.getElementById('prix_recharge').value) || 0;
+            const total = consigne + recharge;
+            document.getElementById('prix_pleine_display').value = total.toLocaleString('fr-FR') + ' FCFA';
+        }
+
+        // Calculer au chargement de la page
+        document.addEventListener('DOMContentLoaded', calculerPrixPleine);
+
         // Aperçu de l'image
         document.getElementById('image').addEventListener('change', function(e) {
             const file = e.target.files[0];
